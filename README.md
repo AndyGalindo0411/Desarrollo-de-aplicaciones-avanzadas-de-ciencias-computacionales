@@ -5,4 +5,4 @@ No, utilicé códigos que encontré en internet.
 ¿Usaste alguna librería? 
 Import Collections
 ¿Se las solicitaste a alguna herramienta de IA?
-Sí, encontré los códigos y le pedí a una IA, que hiciera una unión de los códigos, además de que le pedí que revisará sobre la rúbrica. 
+Sí, le pedí ayuda para errores que me surgía, además si tenía alguna duda, ma apoyé, además de resolución de algunas dudas en el área de la información.  
