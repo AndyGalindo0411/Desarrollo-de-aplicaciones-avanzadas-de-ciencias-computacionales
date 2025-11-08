@@ -1,19 +1,73 @@
 from ply import yacc
-from scanner import tokens, lexer as _lexer  
+from scanner import tokens, lexer as _lexer
 
-# ------------------
-# Precedencia (de menor a mayor)
-# ------------------
+# Nuevas importaciones semánticas
+from tabla_symbolos import FunctionDirectory, VariableTable, SemanticError
+
+# ============================================================
+#  ESTRUCTURAS SEMÁNTICAS GLOBALES
+# ============================================================
+
+# Directorio de funciones (todas las funciones del programa)
+func_dir: FunctionDirectory = FunctionDirectory()
+
+# Tabla de variables globales (vars declaradas antes de 'inicio')
+global_var_table: VariableTable = VariableTable()
+
+
+def _reset_semantic_structures():
+    """
+    Reinicia el directorio de funciones y la tabla de variables globales.
+    Se llama al inicio de cada parse(code).
+    """
+    global func_dir, global_var_table
+    func_dir = FunctionDirectory()
+    global_var_table = VariableTable()
+
+
+def _extract_var_decls(vars_ast):
+    """
+    Extrae una lista de (nombre, tipo) a partir del AST de 'vars'.
+
+    Forma del AST de vars (según tus reglas):
+        ('vars', [id1, id2, ...], tipo, vars_final)
+
+    donde vars_final es:
+        - None, o
+        - otro nodo 'vars' anidado con la misma forma.
+    """
+    result = []
+
+    def visit(node):
+        if not node:
+            return
+        tag = node[0]
+        if tag != 'vars':
+            return
+        _, id_list, var_type, vars_final = node
+        for name in id_list:
+            result.append((name, var_type))
+        if vars_final:
+            visit(vars_final)
+
+    visit(vars_ast)
+    return result
+
+
+# ============================================================
+#  PRECEDENCIA (SINTAXIS)
+# ============================================================
 precedence = (
     ('nonassoc', 'OP_IGUAL', 'OP_DIF', 'OP_MAYOR', 'OP_MENOR'),
     ('left', 'OP_SUMA', 'OP_RESTA'),
     ('left', 'OP_MULT', 'OP_DIV'),
-    
 )
 
-# AST ligero (puedes reemplazarlo por tus propias clases/nodos)
+
+# AST ligero
 def node(tag, *kids):
     return (tag,) + kids
+
 
 # =======================
 # 1) <TIPO>
@@ -21,7 +75,9 @@ def node(tag, *kids):
 def p_tipo(p):
     '''tipo : ENTERO
             | FLOTANTE'''
+    # p[1] será 'entero' o 'flotante'
     p[0] = p[1]
+
 
 # =======================
 # 2) <CTE>
@@ -31,12 +87,17 @@ def p_cte(p):
            | CTE_FLOT'''
     p[0] = ('cte', p[1])
 
+
 # =======================
 # 3) <ASIGNA>
 # =======================
 def p_asigna(p):
     'asigna : ID OP_ASIG expresion PUNTO_Y_COMA'
+    # Nota: Aquí más adelante podremos validar:
+    #  - Que ID esté declarado (en global o en la función actual)
+    #  - Que el tipo de la expresión sea compatible (usando el cubo semántico)
     p[0] = ('assign', p[1], p[3])
+
 
 # =======================
 # 4) <ESTATUTO>  y  <LIST_ESTATUTO>
@@ -55,6 +116,7 @@ def p_estatuto(p):
     else:
         p[0] = ('block_square', p[2] or [])
 
+
 def p_list_estatuto(p):
     '''list_estatuto : empty
                      | estatuto list_estatuto'''
@@ -63,12 +125,14 @@ def p_list_estatuto(p):
     else:
         p[0] = []
 
+
 # =======================
 # 5) <CUERPO>  y  <CUERPO_ESTATUTO>
 # =======================
 def p_cuerpo(p):
     'cuerpo : LLAVE_ABRE cuerpo_estat LLAVE_CIERRA'
     p[0] = p[2] or []
+
 
 def p_cuerpo_estat(p):
     '''cuerpo_estat : empty
@@ -77,6 +141,7 @@ def p_cuerpo_estat(p):
         p[0] = [p[1]] + (p[2] or [])
     else:
         p[0] = []
+
 
 # =======================
 # 6) <EXPRESIÓN>  y  <EXPRESIÓN_EXP>
@@ -89,6 +154,7 @@ def p_expresion(p):
         op, rhs = p[2]
         p[0] = ('rel', op, p[1], rhs)
 
+
 def p_expresion_exp(p):
     '''expresion_exp : empty
                      | OP_MAYOR exp
@@ -100,6 +166,7 @@ def p_expresion_exp(p):
     else:
         p[0] = None
 
+
 # =======================
 # 7) <CICLO>
 # =======================
@@ -107,12 +174,14 @@ def p_ciclo(p):
     'ciclo : MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA'
     p[0] = ('while', p[3], p[6])
 
+
 # =======================
 # 8) <CONDICIÓN>  y  <CONDICIÓN_CUERPO>
 # =======================
 def p_condicion(p):
     'condicion : SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA'
     p[0] = ('if', p[3], p[5], p[6])
+
 
 def p_condicion_cuerpo(p):
     '''condicion_cuerpo : empty
@@ -122,6 +191,7 @@ def p_condicion_cuerpo(p):
     else:
         p[0] = None
 
+
 # =======================
 # 9) <IMPRIME>, <IMPRIME_EXP>, <IMPRIME_EXP’>
 # =======================
@@ -129,12 +199,14 @@ def p_imprime(p):
     'imprime : ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA'
     p[0] = ('print', p[3])
 
+
 def p_imprime_exp(p):
     '''imprime_exp : expresion imprime_exp_p
                    | LETRERO  imprime_exp_p'''
     head = p[1]
     tail = p[2] or []
     p[0] = [head] + tail
+
 
 def p_imprime_exp_p(p):
     '''imprime_exp_p : empty
@@ -144,12 +216,16 @@ def p_imprime_exp_p(p):
     else:
         p[0] = []
 
+
 # =======================
 # 10) <LLAMADA>, <LLAMADA_EXPRESIÓN>, <LLAMADA_EX’>
 # =======================
 def p_llamada(p):
     'llamada : ID PAR_ABRE llamada_expresion PAR_CIERRA'
+    # En el futuro: aquí podremos validar existencia de la función
+    # y tipos/cantidad de parámetros usando func_dir.
     p[0] = ('call', p[1], p[3])
+
 
 def p_llamada_expresion(p):
     '''llamada_expresion : empty
@@ -159,6 +235,7 @@ def p_llamada_expresion(p):
     else:
         p[0] = []
 
+
 def p_llamada_ex(p):
     '''llamada_ex : empty
                   | COMA expresion llamada_ex'''
@@ -167,12 +244,14 @@ def p_llamada_ex(p):
     else:
         p[0] = []
 
+
 # =======================
 # 11) <FACTOR>, <FACTOR_SR>, <FACTOR_RS>, <FACTOR_CTE>
 # =======================
 def p_factor_group(p):
     'factor : PAR_ABRE expresion PAR_CIERRA'
     p[0] = p[2]
+
 
 def p_factor_signed(p):
     'factor : factor_sr factor_cte'
@@ -184,21 +263,27 @@ def p_factor_signed(p):
     else:
         p[0] = value
 
+
 def p_factor_sr(p):
     '''factor_sr : empty
                  | factor_rs'''
     p[0] = p[1] if p[1] else None
+
 
 def p_factor_rs(p):
     '''factor_rs : OP_SUMA
                  | OP_RESTA'''
     p[0] = p[1]
 
+
 def p_factor_cte(p):
     '''factor_cte : ID
                   | cte
                   | llamada'''
+    # Más adelante, cuando integremos verificación de uso,
+    # aquí podremos validar que el ID esté declarado y obtener su tipo.
     p[0] = p[1]
+
 
 # =======================
 # 12) <VARS>, <VARS_TODO>, <VARS_COMA>, <VARS_FINAL>
@@ -206,11 +291,14 @@ def p_factor_cte(p):
 def p_vars(p):
     'vars : VARS ID vars_todo'
     extra_ids, tipo, vars_final = p[3]
+    # AST de vars
     p[0] = ('vars', [p[2]] + extra_ids, tipo, vars_final)
+
 
 def p_vars_todo(p):
     'vars_todo : vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final'
     p[0] = (p[1], p[3], p[5])  # (extra_ids, tipo, vars_final)
+
 
 def p_vars_coma(p):
     '''vars_coma : empty
@@ -220,22 +308,45 @@ def p_vars_coma(p):
     else:
         p[0] = []
 
+
 def p_vars_final(p):
     '''vars_final : empty
                   | vars_todo'''
     p[0] = p[1]
+
 
 # =======================
 # 13) <FUNCS>, <FUNCS_NT>, <FUNC_TIPO>, <FUNCS_COMA>, <FUNC_VARS>
 # =======================
 def p_funcs(p):
     'funcs : funcs_nt ID PAR_ABRE func_tipo PAR_CIERRA LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA'
+    return_type = p[1]  # "nula", "entero", "flotante"
+    func_name   = p[2]
+    params      = p[4]  # lista de (nombre, tipo)
+    vars_ast    = p[7]  # AST de vars locales (o None)
+
+    # ========= ACCIÓN SEMÁNTICA: Directorio de Funciones =========
+    # Crear entrada de función (lanza error si ya existía)
+    func_info = func_dir.add_function(func_name, return_type)
+
+    # Registrar parámetros (y como variables is_param=True)
+    for param_name, param_type in params:
+        func_info.add_parameter(param_name, param_type)
+
+    # Registrar variables locales declaradas en 'func_vars'
+    if vars_ast:
+        for var_name, var_type in _extract_var_decls(vars_ast):
+            func_info.var_table.add_variable(var_name, var_type, is_param=False)
+
+    # AST igual que antes
     p[0] = ('func', p[1], p[2], p[4], p[7], p[8])
+
 
 def p_funcs_nt(p):
     '''funcs_nt : NULA
                 | tipo'''
     p[0] = p[1]
+
 
 def p_func_tipo(p):
     '''func_tipo : empty
@@ -245,6 +356,7 @@ def p_func_tipo(p):
     else:
         p[0] = []
 
+
 def p_funcs_coma(p):
     '''funcs_coma : empty
                   | COMA ID DOS_PUNTOS tipo funcs_coma'''
@@ -253,10 +365,12 @@ def p_funcs_coma(p):
     else:
         p[0] = []
 
+
 def p_func_vars(p):
     '''func_vars : empty
                  | vars'''
     p[0] = p[1]
+
 
 # =======================
 # 14) <EXP>  y  <EXP_TÉRMINO>
@@ -269,6 +383,7 @@ def p_exp(p):
         op, rhs = p[2]
         p[0] = (op, p[1], rhs)
 
+
 def p_exp_termino(p):
     '''exp_termino : empty
                    | OP_SUMA exp
@@ -277,6 +392,7 @@ def p_exp_termino(p):
         p[0] = (p[1], p[2])
     else:
         p[0] = None
+
 
 # =======================
 # 15) <TÉRMINO>  y  <TÉRMINO_FACTOR’>
@@ -289,6 +405,7 @@ def p_termino(p):
         op, rhs = p[2]
         p[0] = (op, p[1], rhs)
 
+
 def p_termino_factor(p):
     '''termino_factor : empty
                       | OP_MULT termino
@@ -298,25 +415,38 @@ def p_termino_factor(p):
     else:
         p[0] = None
 
+
 # =======================
-# 16) <PROGRAMA> (+ envoltorios mínimos para vars/funcs opcionales)
+# 16) <PROGRAMA>  (PRO_VARS, PRO_FUNCS)
 # Programa → programa id ; <PRO_VARS> <PRO_FUNCS> inicio <CUERPO> fin
-# <PRO_VARS>  → ε | <VARS>
-# <PRO_FUNCS> → ε | <FUNCS> <PRO_FUNCS>
 # =======================
 def p_programa(p):
     'programa : PROGRAMA ID PUNTO_Y_COMA pro_vars pro_funcs INICIO cuerpo FIN'
-    p[0] = node('programa', p[2], p[4], p[5], p[7])
+    prog_name = p[2]
+
+    # ========= ACCIÓN SEMÁNTICA: Variables globales =========
+    # p[4] = pro_vars, que puede ser None o un AST 'vars'
+    if p[4] is not None:
+        for var_name, var_type in _extract_var_decls(p[4]):
+            global_var_table.add_variable(var_name, var_type)
+
+    # (Opcional a futuro) Podríamos registrar el programa como una "función" especial.
+
+    # AST del programa (como antes)
+    p[0] = node('programa', prog_name, p[4], p[5], p[7])
+
 
 def p_pro_vars(p):
     '''pro_vars : empty
                 | vars'''
     p[0] = p[1]
 
+
 def p_pro_funcs(p):
     '''pro_funcs : empty
                  | pro_funcs_list'''
     p[0] = p[1] if p[1] else None
+
 
 def p_pro_funcs_list(p):
     '''pro_funcs_list : funcs
@@ -326,6 +456,7 @@ def p_pro_funcs_list(p):
     else:
         p[0] = p[1] + [p[2]]
 
+
 # =======================
 # Vacío y manejo de errores
 # =======================
@@ -333,15 +464,42 @@ def p_empty(p):
     'empty :'
     p[0] = None
 
+
 def p_error(p):
     if p:
         raise SyntaxError(f"Error de sintaxis cerca de token {p.type} (valor={p.value!r})")
     else:
         raise SyntaxError("Error de sintaxis al final de la entrada")
 
+
 # Construcción del parser
 parser = yacc.yacc(start='programa')
 
+
+# ============================================================
+#  API PÚBLICA DEL PARSER
+# ============================================================
 def parse(code: str):
-    """Parsea código fuente Patito y devuelve un AST ligero."""
-    return parser.parse(code, lexer=_lexer)
+    """
+    Parsea código fuente Patito y devuelve un AST ligero.
+    Además, llena:
+      - func_dir  (Directorio de Funciones)
+      - global_var_table  (Tabla de Variables Global)
+    """
+    _reset_semantic_structures()
+    ast = parser.parse(code, lexer=_lexer)
+    return ast
+
+
+def get_function_directory() -> FunctionDirectory:
+    """
+    Devuelve el directorio de funciones construido en el último parse().
+    """
+    return func_dir
+
+
+def get_global_var_table() -> VariableTable:
+    """
+    Devuelve la tabla de variables globales construida en el último parse().
+    """
+    return global_var_table
