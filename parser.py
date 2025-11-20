@@ -4,6 +4,19 @@ from scanner import tokens, lexer as _lexer
 # Nuevas importaciones semánticas
 from tabla_symbolos import FunctionDirectory, VariableTable, SemanticError
 
+# Infraestructura de IR (cuádruplos y temporales)
+from intermediate import reset_ir, emit_quad, new_temp
+
+# (Opcional) Cubo semántico para tipos
+from cube_semantic import (
+    result_type,
+    TIPO_ENTERO,
+    TIPO_FLOTANTE,
+    TIPO_BOOL,
+    TIPO_LETRERO,
+    TIPO_ERROR,
+)
+
 # ============================================================
 #  ESTRUCTURAS SEMÁNTICAS GLOBALES
 # ============================================================
@@ -54,6 +67,20 @@ def _extract_var_decls(vars_ast):
     return result
 
 
+def _lookup_var_type(name: str) -> str:
+    """
+    Busca el tipo de una variable por nombre.
+    Por ahora solo revisa la tabla de variables globales.
+    (NOTA: si quieres soportar locales de funciones, aquí se extiende).
+    """
+    info = global_var_table.lookup(name)
+    if info is None:
+        # Por ahora lanzamos error; si quieres ser más permisiva, puedes
+        # asumir TIPO_ENTERO por default.
+        raise SemanticError(f"Variable '{name}' no declarada.")
+    return info.var_type
+
+
 # ============================================================
 #  PRECEDENCIA (SINTAXIS)
 # ============================================================
@@ -64,7 +91,7 @@ precedence = (
 )
 
 
-# AST ligero
+# AST ligero para estructuras grandes (programa, func, etc.)
 def node(tag, *kids):
     return (tag,) + kids
 
@@ -85,7 +112,12 @@ def p_tipo(p):
 def p_cte(p):
     '''cte : CTE_ENT
            | CTE_FLOT'''
-    p[0] = ('cte', p[1])
+    # Regresamos (valor, tipo)
+    token_type = p.slice[1].type
+    if token_type == 'CTE_ENT':
+        p[0] = (p[1], TIPO_ENTERO)
+    else:
+        p[0] = (p[1], TIPO_FLOTANTE)
 
 
 # =======================
@@ -93,10 +125,26 @@ def p_cte(p):
 # =======================
 def p_asigna(p):
     'asigna : ID OP_ASIG expresion PUNTO_Y_COMA'
-    # Nota: Aquí más adelante podremos validar:
-    #  - Que ID esté declarado (en global o en la función actual)
-    #  - Que el tipo de la expresión sea compatible (usando el cubo semántico)
-    p[0] = ('assign', p[1], p[3])
+    var_name = p[1]
+    # Tipo de la variable (global por ahora)
+    var_type = _lookup_var_type(var_name)
+
+    expr_place, expr_type = p[3]
+
+    # Verificamos tipos con el cubo semántico
+    res_type = result_type(var_type, '=', expr_type)
+    if res_type == TIPO_ERROR:
+        raise SemanticError(
+            f"Type-mismatch en asignación a '{var_name}': "
+            f"no se puede asignar {expr_type} a {var_type}"
+        )
+
+    # Generar cuádruplo de asignación
+    # (=, expr_place, -, var_name)
+    emit_quad('=', expr_place, None, var_name)
+
+    # AST opcional
+    p[0] = ('assign', var_name, p[3])
 
 
 # =======================
@@ -148,11 +196,23 @@ def p_cuerpo_estat(p):
 # =======================
 def p_expresion(p):
     'expresion : exp expresion_exp'
+    left_place, left_type = p[1]
+
     if p[2] is None:
-        p[0] = p[1]
+        # Solo expresión aritmética
+        p[0] = (left_place, left_type)
     else:
-        op, rhs = p[2]
-        p[0] = ('rel', op, p[1], rhs)
+        op, (right_place, right_type) = p[2]
+
+        res_type = result_type(left_type, op, right_type)
+        if res_type == TIPO_ERROR:
+            raise SemanticError(
+                f"Operación relacional inválida: {left_type} {op} {right_type}"
+            )
+
+        temp = new_temp()
+        emit_quad(op, left_place, right_place, temp)
+        p[0] = (temp, res_type)
 
 
 def p_expresion_exp(p):
@@ -162,7 +222,9 @@ def p_expresion_exp(p):
                      | OP_DIF   exp
                      | OP_IGUAL exp'''
     if len(p) == 3:
-        p[0] = (p[1], p[2])
+        op = p[1]           # '>', '<', '!=', '=='
+        right = p[2]        # (place, tipo)
+        p[0] = (op, right)
     else:
         p[0] = None
 
@@ -172,6 +234,7 @@ def p_expresion_exp(p):
 # =======================
 def p_ciclo(p):
     'ciclo : MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA'
+    # AÚN no generamos GOTOs (no-lineales) en esta fase.
     p[0] = ('while', p[3], p[6])
 
 
@@ -180,6 +243,7 @@ def p_ciclo(p):
 # =======================
 def p_condicion(p):
     'condicion : SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA'
+    # AÚN no generamos GOTOF/GOTO (eso va en la parte de no-lineales).
     p[0] = ('if', p[3], p[5], p[6])
 
 
@@ -197,13 +261,27 @@ def p_condicion_cuerpo(p):
 # =======================
 def p_imprime(p):
     'imprime : ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA'
-    p[0] = ('print', p[3])
+    items = p[3]  # lista de ('expr', (place,tipo)) o ('str', lexema)
+
+    for kind, val in items:
+        if kind == 'expr':
+            place, _tipo = val
+            emit_quad('PRINT', place, None, None)
+        else:  # 'str'
+            lexema = val
+            emit_quad('PRINT', lexema, None, None)
+
+    p[0] = ('print', items)
 
 
 def p_imprime_exp(p):
     '''imprime_exp : expresion imprime_exp_p
                    | LETRERO  imprime_exp_p'''
-    head = p[1]
+    if p.slice[1].type == 'LETRERO':
+        head = ('str', p[1])      # cadena literal
+    else:
+        head = ('expr', p[1])     # (place, tipo)
+
     tail = p[2] or []
     p[0] = [head] + tail
 
@@ -222,8 +300,9 @@ def p_imprime_exp_p(p):
 # =======================
 def p_llamada(p):
     'llamada : ID PAR_ABRE llamada_expresion PAR_CIERRA'
-    # En el futuro: aquí podremos validar existencia de la función
-    # y tipos/cantidad de parámetros usando func_dir.
+    # En el futuro: aquí podremos validar existencia de la función,
+    # tipos/cantidad de parámetros y generar ERA/PARAM/GOSUB.
+    # Por ahora solo devolvemos un AST ligero.
     p[0] = ('call', p[1], p[3])
 
 
@@ -250,18 +329,26 @@ def p_llamada_ex(p):
 # =======================
 def p_factor_group(p):
     'factor : PAR_ABRE expresion PAR_CIERRA'
-    p[0] = p[2]
+    # Solo regresamos el resultado de la expresión interna
+    p[0] = p[2]  # (place, tipo)
 
 
 def p_factor_signed(p):
     'factor : factor_sr factor_cte'
-    sign, value = p[1], p[2]
-    if sign == '+':
-        p[0] = ('unary', 'UPLUS', value)
-    elif sign == '-':
-        p[0] = ('unary', 'UMINUS', value)
-    else:
-        p[0] = value
+    sign, (place, tipo) = p[1], p[2]
+
+    if sign is None:
+        p[0] = (place, tipo)
+    elif sign == '+':
+        # +x no cambia el valor
+        p[0] = (place, tipo)
+    else:  # '-'
+        # unary minus: generamos UMINUS si es numérico
+        if tipo not in (TIPO_ENTERO, TIPO_FLOTANTE):
+            raise SemanticError(f"No se puede aplicar signo '-' a tipo {tipo}")
+        temp = new_temp()
+        emit_quad('UMINUS', place, None, temp)
+        p[0] = (temp, tipo)
 
 
 def p_factor_sr(p):
@@ -280,9 +367,18 @@ def p_factor_cte(p):
     '''factor_cte : ID
                   | cte
                   | llamada'''
-    # Más adelante, cuando integremos verificación de uso,
-    # aquí podremos validar que el ID esté declarado y obtener su tipo.
-    p[0] = p[1]
+    sym_type = p.slice[1].type
+
+    if sym_type == 'ID':
+        name = p[1]
+        var_type = _lookup_var_type(name)
+        p[0] = (name, var_type)
+    elif sym_type == 'cte':
+        # p[1] es (valor, tipo) ya
+        p[0] = p[1]
+    else:
+        # llamada: por ahora no soportamos llamadas que regresen valor
+        raise SemanticError("Uso de llamadas en expresiones no está soportado en esta etapa.")
 
 
 # =======================
@@ -377,11 +473,21 @@ def p_func_vars(p):
 # =======================
 def p_exp(p):
     'exp : termino exp_termino'
+    left_place, left_type = p[1]
     if p[2] is None:
-        p[0] = p[1]
+        p[0] = (left_place, left_type)
     else:
-        op, rhs = p[2]
-        p[0] = (op, p[1], rhs)
+        op, (right_place, right_type) = p[2]
+
+        res_type = result_type(left_type, op, right_type)
+        if res_type == TIPO_ERROR:
+            raise SemanticError(
+                f"Operación aritmética inválida: {left_type} {op} {right_type}"
+            )
+
+        temp = new_temp()
+        emit_quad(op, left_place, right_place, temp)
+        p[0] = (temp, res_type)
 
 
 def p_exp_termino(p):
@@ -389,7 +495,9 @@ def p_exp_termino(p):
                    | OP_SUMA exp
                    | OP_RESTA exp'''
     if len(p) == 3:
-        p[0] = (p[1], p[2])
+        op = p[1]   # '+' o '-'
+        right = p[2]  # (place, tipo)
+        p[0] = (op, right)
     else:
         p[0] = None
 
@@ -399,11 +507,21 @@ def p_exp_termino(p):
 # =======================
 def p_termino(p):
     'termino : factor termino_factor'
+    left_place, left_type = p[1]
     if p[2] is None:
-        p[0] = p[1]
+        p[0] = (left_place, left_type)
     else:
-        op, rhs = p[2]
-        p[0] = (op, p[1], rhs)
+        op, (right_place, right_type) = p[2]
+
+        res_type = result_type(left_type, op, right_type)
+        if res_type == TIPO_ERROR:
+            raise SemanticError(
+                f"Operación aritmética inválida: {left_type} {op} {right_type}"
+            )
+
+        temp = new_temp()
+        emit_quad(op, left_place, right_place, temp)
+        p[0] = (temp, res_type)
 
 
 def p_termino_factor(p):
@@ -411,7 +529,9 @@ def p_termino_factor(p):
                       | OP_MULT termino
                       | OP_DIV  termino'''
     if len(p) == 3:
-        p[0] = (p[1], p[2])
+        op = p[1]     # '*' o '/'
+        right = p[2]  # (place, tipo)
+        p[0] = (op, right)
     else:
         p[0] = None
 
@@ -429,8 +549,6 @@ def p_programa(p):
     if p[4] is not None:
         for var_name, var_type in _extract_var_decls(p[4]):
             global_var_table.add_variable(var_name, var_type)
-
-    # (Opcional a futuro) Podríamos registrar el programa como una "función" especial.
 
     # AST del programa (como antes)
     p[0] = node('programa', prog_name, p[4], p[5], p[7])
@@ -485,8 +603,10 @@ def parse(code: str):
     Además, llena:
       - func_dir  (Directorio de Funciones)
       - global_var_table  (Tabla de Variables Global)
+      - y limpia las pilas/cuádruplos de IR antes de usarlo.
     """
     _reset_semantic_structures()
+    reset_ir()  # limpiar PilaO, PTypes, POper, PJumps, quads, temporales
     ast = parser.parse(code, lexer=_lexer)
     return ast
 
