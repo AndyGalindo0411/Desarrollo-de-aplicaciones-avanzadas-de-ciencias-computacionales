@@ -61,8 +61,8 @@ def print_function_directory():
         # Parámetros
         if finfo.parameters:
             print("  Parámetros:")
-            for (pname, ptype) in finfo.parameters:
-                print(f"    {pname} : {ptype}")
+            for (pname, ptype, paddr) in finfo.parameters:
+                print(f"    {pname} : {ptype} @ {paddr}")
         else:
             print("  Parámetros: (ninguno)")
 
@@ -73,7 +73,7 @@ def print_function_directory():
             print("  Variables en ámbito de la función:")
             for vname, vinfo in vdict.items():
                 rol = "parámetro" if vinfo.is_param else "local"
-                print(f"    {vname} : {vinfo.var_type}  ({rol})")
+                print(f"    {vname} : {vinfo.var_type}  ({rol}) @ {vinfo.address}")
         else:
             print("  Variables en ámbito de la función: (ninguna)")
 

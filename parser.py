@@ -2,10 +2,27 @@ from ply import yacc
 from scanner import tokens, lexer as _lexer
 
 # Nuevas importaciones semánticas
-from tabla_symbolos import FunctionDirectory, VariableTable, SemanticError
+from tabla_symbolos import (
+    FunctionDirectory,
+    FunctionInfo,
+    VariableTable,
+    VariableInfo,
+    SemanticError,
+)
 
 # Infraestructura de IR (cuádruplos y temporales)
-from intermediate import reset_ir, emit_quad, new_temp
+from intermediate import (
+    alloc_global,
+    alloc_local,
+    emit_quad,
+    fill_quad,
+    intern_const,
+    new_temp,
+    next_quad,
+    PJumps,
+    reset_function_memory,
+    reset_ir,
+)
 
 # (Opcional) Cubo semántico para tipos
 from cube_semantic import (
@@ -27,15 +44,19 @@ func_dir: FunctionDirectory = FunctionDirectory()
 # Tabla de variables globales (vars declaradas antes de 'inicio')
 global_var_table: VariableTable = VariableTable()
 
+# Función en contexto (para resolver ámbito local); None = global
+current_func: FunctionInfo | None = None
+
 
 def _reset_semantic_structures():
     """
     Reinicia el directorio de funciones y la tabla de variables globales.
     Se llama al inicio de cada parse(code).
     """
-    global func_dir, global_var_table
+    global func_dir, global_var_table, current_func
     func_dir = FunctionDirectory()
     global_var_table = VariableTable()
+    current_func = None
 
 
 def _extract_var_decls(vars_ast):
@@ -67,18 +88,24 @@ def _extract_var_decls(vars_ast):
     return result
 
 
-def _lookup_var_type(name: str) -> str:
+def _lookup_var_info(name: str) -> VariableInfo:
     """
-    Busca el tipo de una variable por nombre.
-    Por ahora solo revisa la tabla de variables globales.
-    (NOTA: si quieres soportar locales de funciones, aquí se extiende).
+    Busca la variable en el \u00e1mbito actual (local si estamos dentro de una
+    función, o global en caso contrario). Levanta SemanticError si no existe.
     """
+    if current_func:
+        info = current_func.var_table.lookup(name)
+        if info:
+            return info
     info = global_var_table.lookup(name)
     if info is None:
-        # Por ahora lanzamos error; si quieres ser más permisiva, puedes
-        # asumir TIPO_ENTERO por default.
         raise SemanticError(f"Variable '{name}' no declarada.")
-    return info.var_type
+    return info
+
+
+def _lookup_var_type(name: str) -> str:
+    """Atajo para obtener el tipo de una variable declarada."""
+    return _lookup_var_info(name).var_type
 
 
 # ============================================================
@@ -112,12 +139,14 @@ def p_tipo(p):
 def p_cte(p):
     '''cte : CTE_ENT
            | CTE_FLOT'''
-    # Regresamos (valor, tipo)
+    # Regresamos (dir_constante, tipo)
     token_type = p.slice[1].type
     if token_type == 'CTE_ENT':
-        p[0] = (p[1], TIPO_ENTERO)
+        val_type = TIPO_ENTERO
     else:
-        p[0] = (p[1], TIPO_FLOTANTE)
+        val_type = TIPO_FLOTANTE
+    addr = intern_const(p[1], val_type)
+    p[0] = (addr, val_type)
 
 
 # =======================
@@ -126,8 +155,9 @@ def p_cte(p):
 def p_asigna(p):
     'asigna : ID OP_ASIG expresion PUNTO_Y_COMA'
     var_name = p[1]
-    # Tipo de la variable (global por ahora)
-    var_type = _lookup_var_type(var_name)
+    var_info = _lookup_var_info(var_name)
+    var_type = var_info.var_type
+    var_addr = var_info.address
 
     expr_place, expr_type = p[3]
 
@@ -141,7 +171,7 @@ def p_asigna(p):
 
     # Generar cuádruplo de asignación
     # (=, expr_place, -, var_name)
-    emit_quad('=', expr_place, None, var_name)
+    emit_quad('=', expr_place, None, var_addr)
 
     # AST opcional
     p[0] = ('assign', var_name, p[3])
@@ -210,7 +240,7 @@ def p_expresion(p):
                 f"Operación relacional inválida: {left_type} {op} {right_type}"
             )
 
-        temp = new_temp()
+        temp = new_temp(res_type)
         emit_quad(op, left_place, right_place, temp)
         p[0] = (temp, res_type)
 
@@ -234,8 +264,27 @@ def p_expresion_exp(p):
 # =======================
 def p_ciclo(p):
     'ciclo : MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA'
-    # AÚN no generamos GOTOs (no-lineales) en esta fase.
-    p[0] = ('while', p[3], p[6])
+    loop_start = next_quad
+
+    cond_place, cond_type = p[3]
+    if cond_type != TIPO_BOOL:
+        raise SemanticError("La condici?n de 'mientras' debe ser de tipo bool")
+
+    # GOTOF para salir del ciclo si la condici?n es falsa
+    false_jump = emit_quad('GOTOF', cond_place, None, None)
+    PJumps.append(false_jump)
+
+    body = p[6]
+
+    # Al final del cuerpo, regresar al inicio
+    emit_quad('GOTO', None, None, loop_start)
+
+    # Rellenar el salto falso para que apunte despu?s del ciclo
+    end_false = PJumps.pop()
+    fill_quad(end_false, next_quad)
+
+    p[0] = ('while', p[3], body)
+
 
 
 # =======================
@@ -243,8 +292,31 @@ def p_ciclo(p):
 # =======================
 def p_condicion(p):
     'condicion : SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA'
-    # AÚN no generamos GOTOF/GOTO (eso va en la parte de no-lineales).
-    p[0] = ('if', p[3], p[5], p[6])
+    cond_place, cond_type = p[3]
+    if cond_type != TIPO_BOOL:
+        raise SemanticError("La condici?n de 'si' debe ser de tipo bool")
+
+    # GOTOF hacia el else (o al final si no hay else)
+    false_jump = emit_quad('GOTOF', cond_place, None, None)
+    PJumps.append(false_jump)
+
+    then_body = p[5]
+    else_body = p[6]
+
+    if else_body is not None:
+        # Saltar el bloque else al terminar el then
+        goto_end = emit_quad('GOTO', None, None, None)
+        # Rellenar el GOTOF para que apunte al inicio del else
+        fill_quad(PJumps.pop(), next_quad)
+        PJumps.append(goto_end)
+        p[0] = ('if_else', p[3], then_body, else_body)
+        # Rellenar el salto al final
+        fill_quad(PJumps.pop(), next_quad)
+    else:
+        # Sin else: el GOTOF apunta al final del if
+        fill_quad(PJumps.pop(), next_quad)
+        p[0] = ('if', p[3], then_body)
+
 
 
 def p_condicion_cuerpo(p):
@@ -268,8 +340,8 @@ def p_imprime(p):
             place, _tipo = val
             emit_quad('PRINT', place, None, None)
         else:  # 'str'
-            lexema = val
-            emit_quad('PRINT', lexema, None, None)
+            lex_addr, _tipo = val
+            emit_quad('PRINT', lex_addr, None, None)
 
     p[0] = ('print', items)
 
@@ -278,7 +350,8 @@ def p_imprime_exp(p):
     '''imprime_exp : expresion imprime_exp_p
                    | LETRERO  imprime_exp_p'''
     if p.slice[1].type == 'LETRERO':
-        head = ('str', p[1])      # cadena literal
+        addr = intern_const(p[1], TIPO_LETRERO)
+        head = ('str', (addr, TIPO_LETRERO))      # cadena literal
     else:
         head = ('expr', p[1])     # (place, tipo)
 
@@ -346,7 +419,7 @@ def p_factor_signed(p):
         # unary minus: generamos UMINUS si es numérico
         if tipo not in (TIPO_ENTERO, TIPO_FLOTANTE):
             raise SemanticError(f"No se puede aplicar signo '-' a tipo {tipo}")
-        temp = new_temp()
+        temp = new_temp(tipo)
         emit_quad('UMINUS', place, None, temp)
         p[0] = (temp, tipo)
 
@@ -371,8 +444,8 @@ def p_factor_cte(p):
 
     if sym_type == 'ID':
         name = p[1]
-        var_type = _lookup_var_type(name)
-        p[0] = (name, var_type)
+        info = _lookup_var_info(name)
+        p[0] = (info.address, info.var_type)
     elif sym_type == 'cte':
         # p[1] es (valor, tipo) ya
         p[0] = p[1]
@@ -414,28 +487,47 @@ def p_vars_final(p):
 # =======================
 # 13) <FUNCS>, <FUNCS_NT>, <FUNC_TIPO>, <FUNCS_COMA>, <FUNC_VARS>
 # =======================
-def p_funcs(p):
-    'funcs : funcs_nt ID PAR_ABRE func_tipo PAR_CIERRA LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA'
-    return_type = p[1]  # "nula", "entero", "flotante"
-    func_name   = p[2]
-    params      = p[4]  # lista de (nombre, tipo)
-    vars_ast    = p[7]  # AST de vars locales (o None)
+def p_func_header(p):
+    'func_header : funcs_nt ID PAR_ABRE func_tipo PAR_CIERRA'
+    return_type = p[1]
+    func_name = p[2]
+    params = p[4] or []  # lista de (nombre, tipo)
 
-    # ========= ACCIÓN SEMÁNTICA: Directorio de Funciones =========
-    # Crear entrada de función (lanza error si ya existía)
+    # Reiniciar memoria local/temporal para la nueva funci?n
+    reset_function_memory()
+
+    # Crear entrada de funci?n (lanza error si ya exist?a)
     func_info = func_dir.add_function(func_name, return_type)
 
-    # Registrar parámetros (y como variables is_param=True)
+    # Registrar par?metros
     for param_name, param_type in params:
-        func_info.add_parameter(param_name, param_type)
+        addr = alloc_local(param_type)
+        func_info.add_parameter(param_name, param_type, addr)
+
+    # Establecer contexto actual
+    global current_func
+    current_func = func_info
+
+    p[0] = (func_info, return_type, func_name, params)
+
+
+def p_funcs(p):
+    'funcs : func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA'
+    func_info, return_type, func_name, params = p[1]
+    vars_ast = p[3]  # AST de vars locales (o None)
 
     # Registrar variables locales declaradas en 'func_vars'
     if vars_ast:
         for var_name, var_type in _extract_var_decls(vars_ast):
-            func_info.var_table.add_variable(var_name, var_type, is_param=False)
+            addr = alloc_local(var_type)
+            func_info.var_table.add_variable(var_name, var_type, addr, is_param=False)
 
-    # AST igual que antes
-    p[0] = ('func', p[1], p[2], p[4], p[7], p[8])
+    body = p[4]
+    p[0] = ('func', return_type, func_name, params, vars_ast, body)
+
+    # Salir del contexto de funci?n
+    global current_func
+    current_func = None
 
 
 def p_funcs_nt(p):
@@ -485,7 +577,7 @@ def p_exp(p):
                 f"Operación aritmética inválida: {left_type} {op} {right_type}"
             )
 
-        temp = new_temp()
+        temp = new_temp(res_type)
         emit_quad(op, left_place, right_place, temp)
         p[0] = (temp, res_type)
 
@@ -519,7 +611,7 @@ def p_termino(p):
                 f"Operación aritmética inválida: {left_type} {op} {right_type}"
             )
 
-        temp = new_temp()
+        temp = new_temp(res_type)
         emit_quad(op, left_place, right_place, temp)
         p[0] = (temp, res_type)
 
@@ -548,7 +640,8 @@ def p_programa(p):
     # p[4] = pro_vars, que puede ser None o un AST 'vars'
     if p[4] is not None:
         for var_name, var_type in _extract_var_decls(p[4]):
-            global_var_table.add_variable(var_name, var_type)
+            addr = alloc_global(var_type)
+            global_var_table.add_variable(var_name, var_type, addr)
 
     # AST del programa (como antes)
     p[0] = node('programa', prog_name, p[4], p[5], p[7])

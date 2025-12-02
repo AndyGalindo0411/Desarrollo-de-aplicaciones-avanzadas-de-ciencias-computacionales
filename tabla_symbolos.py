@@ -23,6 +23,7 @@ class SemanticError(Exception):
 class VariableInfo:
     name: str
     var_type: str         # "entero", "flotante", "bool", "letrero", etc.
+    address: int          # dirección virtual
     is_param: bool = False
     # A futuro:
     # address: Optional[int] = None
@@ -37,14 +38,14 @@ class VariableTable:
     def __init__(self) -> None:
         self._vars: Dict[str, VariableInfo] = {}
 
-    def add_variable(self, name: str, var_type: str, is_param: bool = False) -> None:
+    def add_variable(self, name: str, var_type: str, address: int, is_param: bool = False) -> None:
         """
         Agrega una variable nueva.
         Lanza SemanticError si la variable ya estaba declarada en este ámbito.
         """
         if name in self._vars:
             raise SemanticError(f"Variable '{name}' declarada más de una vez en el mismo ámbito.")
-        self._vars[name] = VariableInfo(name=name, var_type=var_type, is_param=is_param)
+        self._vars[name] = VariableInfo(name=name, var_type=var_type, address=address, is_param=is_param)
 
     def lookup(self, name: str) -> Optional[VariableInfo]:
         """
@@ -69,14 +70,14 @@ class VariableTable:
 class FunctionInfo:
     name: str
     return_type: str                    # "entero", "flotante", "nula"
-    parameters: List[Tuple[str, str]] = field(default_factory=list)  # (nombre, tipo)
+    parameters: List[Tuple[str, str, int]] = field(default_factory=list)  # (nombre, tipo, dir)
     var_table: VariableTable = field(default_factory=VariableTable)
     # A futuro:
     # start_quad: Optional[int] = None
     # num_locals: int = 0
     # num_temps: int = 0
 
-    def add_parameter(self, name: str, param_type: str) -> None:
+    def add_parameter(self, name: str, param_type: str, address: int) -> None:
         """
         Agrega un parámetro a la lista de parámetros
         y lo registra también en la tabla de variables como is_param=True.
@@ -85,9 +86,9 @@ class FunctionInfo:
         if self.var_table.lookup(name) is not None:
             raise SemanticError(f"Parámetro/variable '{name}' ya existe en la función '{self.name}'.")
         # Registrar en la lista de parámetros (orden importa)
-        self.parameters.append((name, param_type))
+        self.parameters.append((name, param_type, address))
         # Registrar en la tabla de variables del ámbito de la función
-        self.var_table.add_variable(name, param_type, is_param=True)
+        self.var_table.add_variable(name, param_type, address, is_param=True)
 
 
 class FunctionDirectory:
