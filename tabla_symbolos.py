@@ -72,8 +72,10 @@ class FunctionInfo:
     return_type: str                    # "entero", "flotante", "nula"
     parameters: List[Tuple[str, str, int]] = field(default_factory=list)  # (nombre, tipo, dir)
     var_table: VariableTable = field(default_factory=VariableTable)
+    start_quad: int | None = None
+    locals_size: Dict[str, int] = field(default_factory=dict)
+    temps_size: Dict[str, int] = field(default_factory=dict)
     # A futuro:
-    # start_quad: Optional[int] = None
     # num_locals: int = 0
     # num_temps: int = 0
 

@@ -91,7 +91,14 @@ class MemoryManager:
         """
         self._free_temps.setdefault(tipo, []).append(address)
 
-    def segment_of(self, address: int) -> str | None:
+    def get_usage(self, segment: str) -> Dict[str, int]:
+        """Devuelve un dict tipo->cu?ntas direcciones se han usado en el segmento."""
+        usage: Dict[str, int] = {}
+        for tipo, base in self._base_map[segment].items():
+            usage[tipo] = self._counters[segment][tipo] - base
+        return usage
+
+        def segment_of(self, address: int) -> str | None:
         """Devuelve el segmento al que pertenece una dirección, o None si no encaja."""
         for seg, bases in self._base_map.items():
             for tipo, base in bases.items():

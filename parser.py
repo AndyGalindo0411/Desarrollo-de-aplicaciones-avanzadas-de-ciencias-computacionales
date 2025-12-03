@@ -23,6 +23,7 @@ from intermediate import (
     reset_function_memory,
     reset_ir,
 )
+from memory import SEG_LOCAL, SEG_TEMP, memory_manager
 
 # (Opcional) Cubo semántico para tipos
 from cube_semantic import (
@@ -47,16 +48,20 @@ global_var_table: VariableTable = VariableTable()
 # Función en contexto (para resolver ámbito local); None = global
 current_func: FunctionInfo | None = None
 
+# Salto inicial para brincar funciones y entrar a main
+main_goto: int | None = None
+
 
 def _reset_semantic_structures():
     """
     Reinicia el directorio de funciones y la tabla de variables globales.
     Se llama al inicio de cada parse(code).
     """
-    global func_dir, global_var_table, current_func
+    global func_dir, global_var_table, current_func, main_goto
     func_dir = FunctionDirectory()
     global_var_table = VariableTable()
     current_func = None
+    main_goto = None
 
 
 def _extract_var_decls(vars_ast):
@@ -150,6 +155,32 @@ def p_cte(p):
 
 
 # =======================
+# <RETORNO>
+# =======================
+def p_retorno(p):
+    '''retorno : RETURN expresion PUNTO_Y_COMA
+               | RETURN PUNTO_Y_COMA'''
+    if current_func is None:
+        raise SemanticError("'return' solo es v?lido dentro de una funci?n")
+
+    func_info = current_func
+    ret_type = func_info.return_type
+
+    if len(p) == 4:  # RETURN PUNTO_Y_COMA (sin expresi?n)
+        if ret_type != 'nula':
+            raise SemanticError(f"La funci?n '{func_info.name}' debe regresar {ret_type}")
+        emit_quad('RETURN', None, None, None)
+        p[0] = ('return', None)
+    else:  # RETURN expresion ;
+        expr_place, expr_type = p[2]
+        if ret_type == 'nula':
+            raise SemanticError("Funciones 'nula' no deben regresar valor")
+        if expr_type != ret_type:
+            raise SemanticError(f"Tipo de retorno inv?lido: se esperaba {ret_type}, se obtuvo {expr_type}")
+        emit_quad('RETURN', expr_place, None, None)
+        p[0] = ('return', (expr_place, expr_type))
+
+# =======================
 # 3) <ASIGNA>
 # =======================
 def p_asigna(p):
@@ -186,6 +217,7 @@ def p_estatuto(p):
                 | ciclo
                 | llamada PUNTO_Y_COMA
                 | imprime
+                | retorno
                 | CORA_ABRE list_estatuto CORA_CIERRA'''
     if len(p) == 2:
         p[0] = p[1]
@@ -373,10 +405,37 @@ def p_imprime_exp_p(p):
 # =======================
 def p_llamada(p):
     'llamada : ID PAR_ABRE llamada_expresion PAR_CIERRA'
-    # En el futuro: aquí podremos validar existencia de la función,
-    # tipos/cantidad de parámetros y generar ERA/PARAM/GOSUB.
-    # Por ahora solo devolvemos un AST ligero.
-    p[0] = ('call', p[1], p[3])
+    func_name = p[1]
+    args = p[3] or []
+
+    func_info = func_dir.get_function(func_name)
+    if not func_info:
+        raise SemanticError(f"Funci?n '{func_name}' no declarada")
+
+    expected_params = func_info.parameters
+    if len(args) != len(expected_params):
+        raise SemanticError(f"Funci?n '{func_name}' espera {len(expected_params)} argumentos, recibi? {len(args)}")
+
+    total_size = sum(func_info.locals_size.values()) + sum(func_info.temps_size.values())
+    emit_quad('ERA', total_size, None, func_name)
+
+    for idx, ((arg_place, arg_type), (_pname, ptype, _paddr)) in enumerate(zip(args, expected_params), start=1):
+        if arg_type != ptype:
+            raise SemanticError(f"Argumento {idx} de '{func_name}' debe ser {ptype}, se recibi? {arg_type}")
+        emit_quad('PARAMETER', arg_place, None, idx)
+
+    emit_quad('GOSUB', func_name, None, func_info.start_quad)
+
+    ret_place = None
+    ret_type = func_info.return_type
+    if ret_type != 'nula':
+        ret_place = new_temp(ret_type)
+        emit_quad('RETVAL', func_name, None, ret_place)
+
+    p[0] = ('call', func_name, args, ret_place, ret_type)
+
+
+
 
 
 def p_llamada_expresion(p):
@@ -504,9 +563,10 @@ def p_func_header(p):
         addr = alloc_local(param_type)
         func_info.add_parameter(param_name, param_type, addr)
 
-    # Establecer contexto actual
+    # Establecer contexto actual y punto de entrada de la funci?n
     global current_func
     current_func = func_info
+    func_info.start_quad = next_quad
 
     p[0] = (func_info, return_type, func_name, params)
 
@@ -525,9 +585,19 @@ def p_funcs(p):
     body = p[4]
     p[0] = ('func', return_type, func_name, params, vars_ast, body)
 
+    # Registrar tama?os de activaci?n
+    func_info.locals_size = memory_manager.get_usage(SEG_LOCAL)
+    func_info.temps_size = memory_manager.get_usage(SEG_TEMP)
+
+    # Cu?druplo de fin de funci?n
+    emit_quad('ENDFUNC', None, None, None)
+
     # Salir del contexto de funci?n
     global current_func
     current_func = None
+
+
+
 
 
 def p_funcs_nt(p):
@@ -633,18 +703,43 @@ def p_termino_factor(p):
 # Programa → programa id ; <PRO_VARS> <PRO_FUNCS> inicio <CUERPO> fin
 # =======================
 def p_programa(p):
-    'programa : PROGRAMA ID PUNTO_Y_COMA pro_vars pro_funcs INICIO cuerpo FIN'
+    'programa : PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN'
     prog_name = p[2]
 
-    # ========= ACCIÓN SEMÁNTICA: Variables globales =========
-    # p[4] = pro_vars, que puede ser None o un AST 'vars'
-    if p[4] is not None:
-        for var_name, var_type in _extract_var_decls(p[4]):
+    pro_vars_ast = p[5]
+    pro_funcs_list = p[6]
+    main_body = p[9]
+
+    # ========= ACCI?N SEM?NTICA: Variables globales =========
+    if pro_vars_ast is not None:
+        for var_name, var_type in _extract_var_decls(pro_vars_ast):
             addr = alloc_global(var_type)
             global_var_table.add_variable(var_name, var_type, addr)
 
     # AST del programa (como antes)
-    p[0] = node('programa', prog_name, p[4], p[5], p[7])
+    p[0] = node('programa', prog_name, pro_vars_ast, pro_funcs_list, main_body)
+    # Fin de programa
+    emit_quad('END', None, None, None)
+
+
+
+
+
+
+# Helper: emitir salto inicial al main
+def p_program_entry(p):
+    'program_entry : '
+    global main_goto
+    main_goto = emit_quad('GOTO', None, None, None)
+    p[0] = None
+
+
+# Helper: rellenar salto al main justo al entrar a INICIO
+def p_program_main(p):
+    'program_main : '
+    if main_goto is not None:
+        fill_quad(main_goto, next_quad)
+    p[0] = None
 
 
 def p_pro_vars(p):

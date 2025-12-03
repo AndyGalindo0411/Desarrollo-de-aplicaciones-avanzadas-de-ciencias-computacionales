@@ -14,6 +14,7 @@ reserved = {
     'si':       'SI',
     'sino':     'SINO',
     'nula':     'NULA',
+    'return':   'RETURN',
 }
 
 # Lista de tokens (incluye reservadas + símbolos + literales)
