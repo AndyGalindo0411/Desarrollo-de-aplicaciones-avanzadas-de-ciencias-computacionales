@@ -119,15 +119,15 @@ def reset_ir() -> None:
     Limpia TODAS las pilas y la lista de cuádruplos.
     Llamar al inicio de cada parse(code).
     """
-    global PilaO, PTypes, POper, PJumps, quads, next_quad, _temp_counter, const_table
-    PilaO = []
-    PTypes = []
-    POper = []
-    PJumps = []
-    quads = []
+    global next_quad, _temp_counter, const_table
+    PilaO.clear()
+    PTypes.clear()
+    POper.clear()
+    PJumps.clear()
+    quads.clear()
     next_quad = 0
     _temp_counter = 0
-    const_table = {}
+    const_table.clear()
     memory_manager.reset_all()
 
 

@@ -86,7 +86,7 @@ class VirtualMachine:
         while 0 <= self.ip < len(self.quads):
             op, a1, a2, res = self.quads[self.ip]
 
-            if op in ('+', '-', '*', '/', '>', '<', '!=', '=='):
+            if op in ('+', '-', '*', '/', '>', '<', '>=', '<=', '!=', '=='):
                 v1 = self._get_val(a1)
                 v2 = self._get_val(a2)
                 if op == '+':
@@ -101,6 +101,10 @@ class VirtualMachine:
                     out = v1 > v2
                 elif op == '<':
                     out = v1 < v2
+                elif op == '>=':
+                    out = v1 >= v2
+                elif op == '<=':
+                    out = v1 <= v2
                 elif op == '!=':
                     out = v1 != v2
                 elif op == '==':

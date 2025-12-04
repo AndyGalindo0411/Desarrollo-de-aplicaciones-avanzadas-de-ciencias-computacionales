@@ -21,7 +21,7 @@ reserved = {
 tokens = [
     # Operadores
     'OP_IGUAL', 'OP_DIF', 'OP_ASIG',
-    'OP_MAYOR', 'OP_MENOR',
+    'OP_MAYOR', 'OP_MENOR', 'OP_MAYORIGUAL', 'OP_MENORIGUAL',
     'OP_SUMA', 'OP_RESTA', 'OP_MULT', 'OP_DIV',
 
     # Delimitadores
@@ -38,6 +38,8 @@ tokens = [
 # Tokens por ER (según tu tabla)
 # ------------------
 # Operadores (dobles primero por máxima voracidad)
+t_OP_MAYORIGUAL = r'>='
+t_OP_MENORIGUAL = r'<='
 t_OP_IGUAL = r'=='
 t_OP_DIF   = r'!='
 t_OP_ASIG  = r'='

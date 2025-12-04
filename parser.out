@@ -26,158 +26,164 @@ Rule 20    expresion -> exp expresion_exp
 Rule 21    expresion_exp -> empty
 Rule 22    expresion_exp -> OP_MAYOR exp
 Rule 23    expresion_exp -> OP_MENOR exp
-Rule 24    expresion_exp -> OP_DIF exp
-Rule 25    expresion_exp -> OP_IGUAL exp
-Rule 26    ciclo -> MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
-Rule 27    condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
-Rule 28    condicion_cuerpo -> empty
-Rule 29    condicion_cuerpo -> SINO cuerpo
-Rule 30    imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA
-Rule 31    imprime_exp -> expresion imprime_exp_p
-Rule 32    imprime_exp -> LETRERO imprime_exp_p
-Rule 33    imprime_exp_p -> empty
-Rule 34    imprime_exp_p -> COMA imprime_exp
-Rule 35    llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA
-Rule 36    llamada_expresion -> empty
-Rule 37    llamada_expresion -> expresion llamada_ex
-Rule 38    llamada_ex -> empty
-Rule 39    llamada_ex -> COMA expresion llamada_ex
-Rule 40    factor -> PAR_ABRE expresion PAR_CIERRA
-Rule 41    factor -> factor_sr factor_cte
-Rule 42    factor_sr -> empty
-Rule 43    factor_sr -> factor_rs
-Rule 44    factor_rs -> OP_SUMA
-Rule 45    factor_rs -> OP_RESTA
-Rule 46    factor_cte -> ID
-Rule 47    factor_cte -> cte
-Rule 48    factor_cte -> llamada
-Rule 49    vars -> VARS ID vars_todo
-Rule 50    vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final
-Rule 51    vars_coma -> empty
-Rule 52    vars_coma -> COMA ID vars_coma
-Rule 53    vars_final -> empty
-Rule 54    vars_final -> vars_todo
-Rule 55    func_header -> funcs_nt ID PAR_ABRE func_tipo PAR_CIERRA
-Rule 56    funcs -> func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA
-Rule 57    funcs_nt -> NULA
-Rule 58    funcs_nt -> tipo
-Rule 59    func_tipo -> empty
-Rule 60    func_tipo -> ID DOS_PUNTOS tipo funcs_coma
-Rule 61    funcs_coma -> empty
-Rule 62    funcs_coma -> COMA ID DOS_PUNTOS tipo funcs_coma
-Rule 63    func_vars -> empty
-Rule 64    func_vars -> vars
-Rule 65    exp -> termino exp_termino
-Rule 66    exp_termino -> empty
-Rule 67    exp_termino -> OP_SUMA exp
-Rule 68    exp_termino -> OP_RESTA exp
-Rule 69    termino -> factor termino_factor
-Rule 70    termino_factor -> empty
-Rule 71    termino_factor -> OP_MULT termino
-Rule 72    termino_factor -> OP_DIV termino
-Rule 73    programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN
-Rule 74    program_entry -> <empty>
-Rule 75    program_main -> <empty>
-Rule 76    pro_vars -> empty
-Rule 77    pro_vars -> vars
-Rule 78    pro_funcs -> empty
-Rule 79    pro_funcs -> pro_funcs_list
-Rule 80    pro_funcs_list -> funcs
-Rule 81    pro_funcs_list -> pro_funcs_list funcs
-Rule 82    empty -> <empty>
+Rule 24    expresion_exp -> OP_MAYORIGUAL exp
+Rule 25    expresion_exp -> OP_MENORIGUAL exp
+Rule 26    expresion_exp -> OP_DIF exp
+Rule 27    expresion_exp -> OP_IGUAL exp
+Rule 28    ciclo -> MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
+Rule 29    ciclo_marca -> <empty>
+Rule 30    condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
+Rule 31    condicion_cuerpo -> empty
+Rule 32    condicion_cuerpo -> SINO cuerpo
+Rule 33    imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA
+Rule 34    imprime_exp -> expresion imprime_exp_p
+Rule 35    imprime_exp -> LETRERO imprime_exp_p
+Rule 36    imprime_exp_p -> empty
+Rule 37    imprime_exp_p -> COMA imprime_exp
+Rule 38    llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA
+Rule 39    llamada_expresion -> empty
+Rule 40    llamada_expresion -> expresion llamada_ex
+Rule 41    llamada_ex -> empty
+Rule 42    llamada_ex -> COMA expresion llamada_ex
+Rule 43    factor -> PAR_ABRE expresion PAR_CIERRA
+Rule 44    factor -> factor_sr factor_cte
+Rule 45    factor_sr -> empty
+Rule 46    factor_sr -> factor_rs
+Rule 47    factor_rs -> OP_SUMA
+Rule 48    factor_rs -> OP_RESTA
+Rule 49    factor_cte -> ID
+Rule 50    factor_cte -> cte
+Rule 51    factor_cte -> llamada
+Rule 52    vars -> VARS ID vars_todo
+Rule 53    vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final
+Rule 54    vars_coma -> empty
+Rule 55    vars_coma -> COMA ID vars_coma
+Rule 56    vars_final -> empty
+Rule 57    vars_final -> vars_todo
+Rule 58    func_header -> funcs_nt ID PAR_ABRE func_tipo PAR_CIERRA
+Rule 59    funcs -> func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA
+Rule 60    funcs_nt -> NULA
+Rule 61    funcs_nt -> tipo
+Rule 62    func_tipo -> empty
+Rule 63    func_tipo -> ID DOS_PUNTOS tipo funcs_coma
+Rule 64    funcs_coma -> empty
+Rule 65    funcs_coma -> COMA ID DOS_PUNTOS tipo funcs_coma
+Rule 66    func_vars -> empty
+Rule 67    func_vars -> vars
+Rule 68    exp -> termino exp_termino
+Rule 69    exp_termino -> empty
+Rule 70    exp_termino -> OP_SUMA exp
+Rule 71    exp_termino -> OP_RESTA exp
+Rule 72    termino -> factor termino_factor
+Rule 73    termino_factor -> empty
+Rule 74    termino_factor -> OP_MULT termino
+Rule 75    termino_factor -> OP_DIV termino
+Rule 76    programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN
+Rule 77    program_entry -> <empty>
+Rule 78    program_main -> <empty>
+Rule 79    pro_vars -> empty
+Rule 80    pro_vars -> vars
+Rule 81    pro_funcs -> empty
+Rule 82    pro_funcs -> pro_funcs_list
+Rule 83    pro_funcs_list -> funcs
+Rule 84    pro_funcs_list -> pro_funcs_list funcs
+Rule 85    empty -> <empty>
 
 Terminals, with rules where they appear
 
-COMA                 : 34 39 52 62
+COMA                 : 37 42 55 65
 CORA_ABRE            : 14
 CORA_CIERRA          : 14
 CTE_ENT              : 3
 CTE_FLOT             : 4
-DOS_PUNTOS           : 50 60 62
+DOS_PUNTOS           : 53 63 65
 ENTERO               : 1
-ESCRIBE              : 30
-FIN                  : 73
+ESCRIBE              : 33
+FIN                  : 76
 FLOTANTE             : 2
-HAZ                  : 26
-ID                   : 7 35 46 49 52 55 60 62 73
-INICIO               : 73
-LETRERO              : 32
-LLAVE_ABRE           : 17 56
-LLAVE_CIERRA         : 17 56
-MIENTRAS             : 26
-NULA                 : 57
+HAZ                  : 28
+ID                   : 7 38 49 52 55 58 63 65 76
+INICIO               : 76
+LETRERO              : 35
+LLAVE_ABRE           : 17 59
+LLAVE_CIERRA         : 17 59
+MIENTRAS             : 28
+NULA                 : 60
 OP_ASIG              : 7
-OP_DIF               : 24
-OP_DIV               : 72
-OP_IGUAL             : 25
+OP_DIF               : 26
+OP_DIV               : 75
+OP_IGUAL             : 27
 OP_MAYOR             : 22
+OP_MAYORIGUAL        : 24
 OP_MENOR             : 23
-OP_MULT              : 71
-OP_RESTA             : 45 68
-OP_SUMA              : 44 67
-PAR_ABRE             : 26 27 30 35 40 55
-PAR_CIERRA           : 26 27 30 35 40 55
-PROGRAMA             : 73
-PUNTO_Y_COMA         : 5 6 7 11 26 27 30 50 56 73
+OP_MENORIGUAL        : 25
+OP_MULT              : 74
+OP_RESTA             : 48 71
+OP_SUMA              : 47 70
+PAR_ABRE             : 28 30 33 38 43 58
+PAR_CIERRA           : 28 30 33 38 43 58
+PROGRAMA             : 76
+PUNTO_Y_COMA         : 5 6 7 11 28 30 33 53 59 76
 RETURN               : 5 6
-SI                   : 27
-SINO                 : 29
-VARS                 : 49
+SI                   : 30
+SINO                 : 32
+VARS                 : 52
 error                : 
 
 Nonterminals, with rules where they appear
 
 asigna               : 8
 ciclo                : 10
+ciclo_marca          : 28
 condicion            : 9
-condicion_cuerpo     : 27
-cte                  : 47
-cuerpo               : 26 27 29 56 73
+condicion_cuerpo     : 30
+cte                  : 50
+cuerpo               : 28 30 32 59 76
 cuerpo_estat         : 17 19
-empty                : 15 18 21 28 33 36 38 42 51 53 59 61 63 66 70 76 78
+empty                : 15 18 21 31 36 39 41 45 54 56 62 64 66 69 73 79 81
 estatuto             : 16 19
-exp                  : 20 22 23 24 25 67 68
-exp_termino          : 65
-expresion            : 5 7 26 27 31 37 39 40
+exp                  : 20 22 23 24 25 26 27 70 71
+exp_termino          : 68
+expresion            : 5 7 28 30 34 40 42 43
 expresion_exp        : 20
-factor               : 69
-factor_cte           : 41
-factor_rs            : 43
-factor_sr            : 41
-func_header          : 56
-func_tipo            : 55
-func_vars            : 56
-funcs                : 80 81
-funcs_coma           : 60 62
-funcs_nt             : 55
+factor               : 72
+factor_cte           : 44
+factor_rs            : 46
+factor_sr            : 44
+func_header          : 59
+func_tipo            : 58
+func_vars            : 59
+funcs                : 83 84
+funcs_coma           : 63 65
+funcs_nt             : 58
 imprime              : 12
-imprime_exp          : 30 34
-imprime_exp_p        : 31 32
+imprime_exp          : 33 37
+imprime_exp_p        : 34 35
 list_estatuto        : 14 16
-llamada              : 11 48
-llamada_ex           : 37 39
-llamada_expresion    : 35
-pro_funcs            : 73
-pro_funcs_list       : 79 81
-pro_vars             : 73
-program_entry        : 73
-program_main         : 73
+llamada              : 11 51
+llamada_ex           : 40 42
+llamada_expresion    : 38
+pro_funcs            : 76
+pro_funcs_list       : 82 84
+pro_vars             : 76
+program_entry        : 76
+program_main         : 76
 programa             : 0
 retorno              : 13
-termino              : 65 71 72
-termino_factor       : 69
-tipo                 : 50 58 60 62
-vars                 : 64 77
-vars_coma            : 50 52
-vars_final           : 50
-vars_todo            : 49 54
+termino              : 68 74 75
+termino_factor       : 72
+tipo                 : 53 61 63 65
+vars                 : 67 80
+vars_coma            : 53 55
+vars_final           : 53
+vars_todo            : 52 57
 
 Parsing method: LALR
 
 state 0
 
     (0) S' -> . programa
-    (73) programa -> . PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN
+    (76) programa -> . PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN
 
     PROGRAMA        shift and go to state 2
 
@@ -191,43 +197,43 @@ state 1
 
 state 2
 
-    (73) programa -> PROGRAMA . ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN
+    (76) programa -> PROGRAMA . ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN
 
     ID              shift and go to state 3
 
 
 state 3
 
-    (73) programa -> PROGRAMA ID . PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN
+    (76) programa -> PROGRAMA ID . PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN
 
     PUNTO_Y_COMA    shift and go to state 4
 
 
 state 4
 
-    (73) programa -> PROGRAMA ID PUNTO_Y_COMA . program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN
-    (74) program_entry -> .
+    (76) programa -> PROGRAMA ID PUNTO_Y_COMA . program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN
+    (77) program_entry -> .
 
-    VARS            reduce using rule 74 (program_entry -> .)
-    NULA            reduce using rule 74 (program_entry -> .)
-    ENTERO          reduce using rule 74 (program_entry -> .)
-    FLOTANTE        reduce using rule 74 (program_entry -> .)
-    INICIO          reduce using rule 74 (program_entry -> .)
+    VARS            reduce using rule 77 (program_entry -> .)
+    NULA            reduce using rule 77 (program_entry -> .)
+    ENTERO          reduce using rule 77 (program_entry -> .)
+    FLOTANTE        reduce using rule 77 (program_entry -> .)
+    INICIO          reduce using rule 77 (program_entry -> .)
 
     program_entry                  shift and go to state 5
 
 state 5
 
-    (73) programa -> PROGRAMA ID PUNTO_Y_COMA program_entry . pro_vars pro_funcs INICIO program_main cuerpo FIN
-    (76) pro_vars -> . empty
-    (77) pro_vars -> . vars
-    (82) empty -> .
-    (49) vars -> . VARS ID vars_todo
+    (76) programa -> PROGRAMA ID PUNTO_Y_COMA program_entry . pro_vars pro_funcs INICIO program_main cuerpo FIN
+    (79) pro_vars -> . empty
+    (80) pro_vars -> . vars
+    (85) empty -> .
+    (52) vars -> . VARS ID vars_todo
 
-    NULA            reduce using rule 82 (empty -> .)
-    ENTERO          reduce using rule 82 (empty -> .)
-    FLOTANTE        reduce using rule 82 (empty -> .)
-    INICIO          reduce using rule 82 (empty -> .)
+    NULA            reduce using rule 85 (empty -> .)
+    ENTERO          reduce using rule 85 (empty -> .)
+    FLOTANTE        reduce using rule 85 (empty -> .)
+    INICIO          reduce using rule 85 (empty -> .)
     VARS            shift and go to state 9
 
     pro_vars                       shift and go to state 6
@@ -236,20 +242,20 @@ state 5
 
 state 6
 
-    (73) programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars . pro_funcs INICIO program_main cuerpo FIN
-    (78) pro_funcs -> . empty
-    (79) pro_funcs -> . pro_funcs_list
-    (82) empty -> .
-    (80) pro_funcs_list -> . funcs
-    (81) pro_funcs_list -> . pro_funcs_list funcs
-    (56) funcs -> . func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA
-    (55) func_header -> . funcs_nt ID PAR_ABRE func_tipo PAR_CIERRA
-    (57) funcs_nt -> . NULA
-    (58) funcs_nt -> . tipo
+    (76) programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars . pro_funcs INICIO program_main cuerpo FIN
+    (81) pro_funcs -> . empty
+    (82) pro_funcs -> . pro_funcs_list
+    (85) empty -> .
+    (83) pro_funcs_list -> . funcs
+    (84) pro_funcs_list -> . pro_funcs_list funcs
+    (59) funcs -> . func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA
+    (58) func_header -> . funcs_nt ID PAR_ABRE func_tipo PAR_CIERRA
+    (60) funcs_nt -> . NULA
+    (61) funcs_nt -> . tipo
     (1) tipo -> . ENTERO
     (2) tipo -> . FLOTANTE
 
-    INICIO          reduce using rule 82 (empty -> .)
+    INICIO          reduce using rule 85 (empty -> .)
     NULA            shift and go to state 16
     ENTERO          shift and go to state 18
     FLOTANTE        shift and go to state 19
@@ -264,57 +270,57 @@ state 6
 
 state 7
 
-    (76) pro_vars -> empty .
+    (79) pro_vars -> empty .
 
-    NULA            reduce using rule 76 (pro_vars -> empty .)
-    ENTERO          reduce using rule 76 (pro_vars -> empty .)
-    FLOTANTE        reduce using rule 76 (pro_vars -> empty .)
-    INICIO          reduce using rule 76 (pro_vars -> empty .)
+    NULA            reduce using rule 79 (pro_vars -> empty .)
+    ENTERO          reduce using rule 79 (pro_vars -> empty .)
+    FLOTANTE        reduce using rule 79 (pro_vars -> empty .)
+    INICIO          reduce using rule 79 (pro_vars -> empty .)
 
 
 state 8
 
-    (77) pro_vars -> vars .
+    (80) pro_vars -> vars .
 
-    NULA            reduce using rule 77 (pro_vars -> vars .)
-    ENTERO          reduce using rule 77 (pro_vars -> vars .)
-    FLOTANTE        reduce using rule 77 (pro_vars -> vars .)
-    INICIO          reduce using rule 77 (pro_vars -> vars .)
+    NULA            reduce using rule 80 (pro_vars -> vars .)
+    ENTERO          reduce using rule 80 (pro_vars -> vars .)
+    FLOTANTE        reduce using rule 80 (pro_vars -> vars .)
+    INICIO          reduce using rule 80 (pro_vars -> vars .)
 
 
 state 9
 
-    (49) vars -> VARS . ID vars_todo
+    (52) vars -> VARS . ID vars_todo
 
     ID              shift and go to state 20
 
 
 state 10
 
-    (73) programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs . INICIO program_main cuerpo FIN
+    (76) programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs . INICIO program_main cuerpo FIN
 
     INICIO          shift and go to state 21
 
 
 state 11
 
-    (78) pro_funcs -> empty .
+    (81) pro_funcs -> empty .
 
-    INICIO          reduce using rule 78 (pro_funcs -> empty .)
+    INICIO          reduce using rule 81 (pro_funcs -> empty .)
 
 
 state 12
 
-    (79) pro_funcs -> pro_funcs_list .
-    (81) pro_funcs_list -> pro_funcs_list . funcs
-    (56) funcs -> . func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA
-    (55) func_header -> . funcs_nt ID PAR_ABRE func_tipo PAR_CIERRA
-    (57) funcs_nt -> . NULA
-    (58) funcs_nt -> . tipo
+    (82) pro_funcs -> pro_funcs_list .
+    (84) pro_funcs_list -> pro_funcs_list . funcs
+    (59) funcs -> . func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA
+    (58) func_header -> . funcs_nt ID PAR_ABRE func_tipo PAR_CIERRA
+    (60) funcs_nt -> . NULA
+    (61) funcs_nt -> . tipo
     (1) tipo -> . ENTERO
     (2) tipo -> . FLOTANTE
 
-    INICIO          reduce using rule 79 (pro_funcs -> pro_funcs_list .)
+    INICIO          reduce using rule 82 (pro_funcs -> pro_funcs_list .)
     NULA            shift and go to state 16
     ENTERO          shift and go to state 18
     FLOTANTE        shift and go to state 19
@@ -326,40 +332,40 @@ state 12
 
 state 13
 
-    (80) pro_funcs_list -> funcs .
+    (83) pro_funcs_list -> funcs .
 
-    NULA            reduce using rule 80 (pro_funcs_list -> funcs .)
-    ENTERO          reduce using rule 80 (pro_funcs_list -> funcs .)
-    FLOTANTE        reduce using rule 80 (pro_funcs_list -> funcs .)
-    INICIO          reduce using rule 80 (pro_funcs_list -> funcs .)
+    NULA            reduce using rule 83 (pro_funcs_list -> funcs .)
+    ENTERO          reduce using rule 83 (pro_funcs_list -> funcs .)
+    FLOTANTE        reduce using rule 83 (pro_funcs_list -> funcs .)
+    INICIO          reduce using rule 83 (pro_funcs_list -> funcs .)
 
 
 state 14
 
-    (56) funcs -> func_header . LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA
+    (59) funcs -> func_header . LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA
 
     LLAVE_ABRE      shift and go to state 23
 
 
 state 15
 
-    (55) func_header -> funcs_nt . ID PAR_ABRE func_tipo PAR_CIERRA
+    (58) func_header -> funcs_nt . ID PAR_ABRE func_tipo PAR_CIERRA
 
     ID              shift and go to state 24
 
 
 state 16
 
-    (57) funcs_nt -> NULA .
+    (60) funcs_nt -> NULA .
 
-    ID              reduce using rule 57 (funcs_nt -> NULA .)
+    ID              reduce using rule 60 (funcs_nt -> NULA .)
 
 
 state 17
 
-    (58) funcs_nt -> tipo .
+    (61) funcs_nt -> tipo .
 
-    ID              reduce using rule 58 (funcs_nt -> tipo .)
+    ID              reduce using rule 61 (funcs_nt -> tipo .)
 
 
 state 18
@@ -384,14 +390,14 @@ state 19
 
 state 20
 
-    (49) vars -> VARS ID . vars_todo
-    (50) vars_todo -> . vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final
-    (51) vars_coma -> . empty
-    (52) vars_coma -> . COMA ID vars_coma
-    (82) empty -> .
+    (52) vars -> VARS ID . vars_todo
+    (53) vars_todo -> . vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final
+    (54) vars_coma -> . empty
+    (55) vars_coma -> . COMA ID vars_coma
+    (85) empty -> .
 
     COMA            shift and go to state 28
-    DOS_PUNTOS      reduce using rule 82 (empty -> .)
+    DOS_PUNTOS      reduce using rule 85 (empty -> .)
 
     vars_todo                      shift and go to state 25
     vars_coma                      shift and go to state 26
@@ -399,32 +405,32 @@ state 20
 
 state 21
 
-    (73) programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO . program_main cuerpo FIN
-    (75) program_main -> .
+    (76) programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO . program_main cuerpo FIN
+    (78) program_main -> .
 
-    LLAVE_ABRE      reduce using rule 75 (program_main -> .)
+    LLAVE_ABRE      reduce using rule 78 (program_main -> .)
 
     program_main                   shift and go to state 29
 
 state 22
 
-    (81) pro_funcs_list -> pro_funcs_list funcs .
+    (84) pro_funcs_list -> pro_funcs_list funcs .
 
-    NULA            reduce using rule 81 (pro_funcs_list -> pro_funcs_list funcs .)
-    ENTERO          reduce using rule 81 (pro_funcs_list -> pro_funcs_list funcs .)
-    FLOTANTE        reduce using rule 81 (pro_funcs_list -> pro_funcs_list funcs .)
-    INICIO          reduce using rule 81 (pro_funcs_list -> pro_funcs_list funcs .)
+    NULA            reduce using rule 84 (pro_funcs_list -> pro_funcs_list funcs .)
+    ENTERO          reduce using rule 84 (pro_funcs_list -> pro_funcs_list funcs .)
+    FLOTANTE        reduce using rule 84 (pro_funcs_list -> pro_funcs_list funcs .)
+    INICIO          reduce using rule 84 (pro_funcs_list -> pro_funcs_list funcs .)
 
 
 state 23
 
-    (56) funcs -> func_header LLAVE_ABRE . func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA
-    (63) func_vars -> . empty
-    (64) func_vars -> . vars
-    (82) empty -> .
-    (49) vars -> . VARS ID vars_todo
+    (59) funcs -> func_header LLAVE_ABRE . func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA
+    (66) func_vars -> . empty
+    (67) func_vars -> . vars
+    (85) empty -> .
+    (52) vars -> . VARS ID vars_todo
 
-    LLAVE_ABRE      reduce using rule 82 (empty -> .)
+    LLAVE_ABRE      reduce using rule 85 (empty -> .)
     VARS            shift and go to state 9
 
     func_vars                      shift and go to state 30
@@ -433,46 +439,46 @@ state 23
 
 state 24
 
-    (55) func_header -> funcs_nt ID . PAR_ABRE func_tipo PAR_CIERRA
+    (58) func_header -> funcs_nt ID . PAR_ABRE func_tipo PAR_CIERRA
 
     PAR_ABRE        shift and go to state 33
 
 
 state 25
 
-    (49) vars -> VARS ID vars_todo .
+    (52) vars -> VARS ID vars_todo .
 
-    NULA            reduce using rule 49 (vars -> VARS ID vars_todo .)
-    ENTERO          reduce using rule 49 (vars -> VARS ID vars_todo .)
-    FLOTANTE        reduce using rule 49 (vars -> VARS ID vars_todo .)
-    INICIO          reduce using rule 49 (vars -> VARS ID vars_todo .)
-    LLAVE_ABRE      reduce using rule 49 (vars -> VARS ID vars_todo .)
+    NULA            reduce using rule 52 (vars -> VARS ID vars_todo .)
+    ENTERO          reduce using rule 52 (vars -> VARS ID vars_todo .)
+    FLOTANTE        reduce using rule 52 (vars -> VARS ID vars_todo .)
+    INICIO          reduce using rule 52 (vars -> VARS ID vars_todo .)
+    LLAVE_ABRE      reduce using rule 52 (vars -> VARS ID vars_todo .)
 
 
 state 26
 
-    (50) vars_todo -> vars_coma . DOS_PUNTOS tipo PUNTO_Y_COMA vars_final
+    (53) vars_todo -> vars_coma . DOS_PUNTOS tipo PUNTO_Y_COMA vars_final
 
     DOS_PUNTOS      shift and go to state 34
 
 
 state 27
 
-    (51) vars_coma -> empty .
+    (54) vars_coma -> empty .
 
-    DOS_PUNTOS      reduce using rule 51 (vars_coma -> empty .)
+    DOS_PUNTOS      reduce using rule 54 (vars_coma -> empty .)
 
 
 state 28
 
-    (52) vars_coma -> COMA . ID vars_coma
+    (55) vars_coma -> COMA . ID vars_coma
 
     ID              shift and go to state 35
 
 
 state 29
 
-    (73) programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main . cuerpo FIN
+    (76) programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main . cuerpo FIN
     (17) cuerpo -> . LLAVE_ABRE cuerpo_estat LLAVE_CIERRA
 
     LLAVE_ABRE      shift and go to state 37
@@ -481,7 +487,7 @@ state 29
 
 state 30
 
-    (56) funcs -> func_header LLAVE_ABRE func_vars . cuerpo LLAVE_CIERRA PUNTO_Y_COMA
+    (59) funcs -> func_header LLAVE_ABRE func_vars . cuerpo LLAVE_CIERRA PUNTO_Y_COMA
     (17) cuerpo -> . LLAVE_ABRE cuerpo_estat LLAVE_CIERRA
 
     LLAVE_ABRE      shift and go to state 37
@@ -490,34 +496,34 @@ state 30
 
 state 31
 
-    (63) func_vars -> empty .
+    (66) func_vars -> empty .
 
-    LLAVE_ABRE      reduce using rule 63 (func_vars -> empty .)
+    LLAVE_ABRE      reduce using rule 66 (func_vars -> empty .)
 
 
 state 32
 
-    (64) func_vars -> vars .
+    (67) func_vars -> vars .
 
-    LLAVE_ABRE      reduce using rule 64 (func_vars -> vars .)
+    LLAVE_ABRE      reduce using rule 67 (func_vars -> vars .)
 
 
 state 33
 
-    (55) func_header -> funcs_nt ID PAR_ABRE . func_tipo PAR_CIERRA
-    (59) func_tipo -> . empty
-    (60) func_tipo -> . ID DOS_PUNTOS tipo funcs_coma
-    (82) empty -> .
+    (58) func_header -> funcs_nt ID PAR_ABRE . func_tipo PAR_CIERRA
+    (62) func_tipo -> . empty
+    (63) func_tipo -> . ID DOS_PUNTOS tipo funcs_coma
+    (85) empty -> .
 
     ID              shift and go to state 39
-    PAR_CIERRA      reduce using rule 82 (empty -> .)
+    PAR_CIERRA      reduce using rule 85 (empty -> .)
 
     func_tipo                      shift and go to state 40
     empty                          shift and go to state 41
 
 state 34
 
-    (50) vars_todo -> vars_coma DOS_PUNTOS . tipo PUNTO_Y_COMA vars_final
+    (53) vars_todo -> vars_coma DOS_PUNTOS . tipo PUNTO_Y_COMA vars_final
     (1) tipo -> . ENTERO
     (2) tipo -> . FLOTANTE
 
@@ -528,20 +534,20 @@ state 34
 
 state 35
 
-    (52) vars_coma -> COMA ID . vars_coma
-    (51) vars_coma -> . empty
-    (52) vars_coma -> . COMA ID vars_coma
-    (82) empty -> .
+    (55) vars_coma -> COMA ID . vars_coma
+    (54) vars_coma -> . empty
+    (55) vars_coma -> . COMA ID vars_coma
+    (85) empty -> .
 
     COMA            shift and go to state 28
-    DOS_PUNTOS      reduce using rule 82 (empty -> .)
+    DOS_PUNTOS      reduce using rule 85 (empty -> .)
 
     vars_coma                      shift and go to state 43
     empty                          shift and go to state 27
 
 state 36
 
-    (73) programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo . FIN
+    (76) programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo . FIN
 
     FIN             shift and go to state 44
 
@@ -551,7 +557,7 @@ state 37
     (17) cuerpo -> LLAVE_ABRE . cuerpo_estat LLAVE_CIERRA
     (18) cuerpo_estat -> . empty
     (19) cuerpo_estat -> . estatuto cuerpo_estat
-    (82) empty -> .
+    (85) empty -> .
     (8) estatuto -> . asigna
     (9) estatuto -> . condicion
     (10) estatuto -> . ciclo
@@ -560,14 +566,14 @@ state 37
     (13) estatuto -> . retorno
     (14) estatuto -> . CORA_ABRE list_estatuto CORA_CIERRA
     (7) asigna -> . ID OP_ASIG expresion PUNTO_Y_COMA
-    (27) condicion -> . SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
-    (26) ciclo -> . MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
-    (35) llamada -> . ID PAR_ABRE llamada_expresion PAR_CIERRA
-    (30) imprime -> . ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA
+    (30) condicion -> . SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
+    (28) ciclo -> . MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
+    (38) llamada -> . ID PAR_ABRE llamada_expresion PAR_CIERRA
+    (33) imprime -> . ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA
     (5) retorno -> . RETURN expresion PUNTO_Y_COMA
     (6) retorno -> . RETURN PUNTO_Y_COMA
 
-    LLAVE_CIERRA    reduce using rule 82 (empty -> .)
+    LLAVE_CIERRA    reduce using rule 85 (empty -> .)
     CORA_ABRE       shift and go to state 54
     ID              shift and go to state 55
     SI              shift and go to state 56
@@ -587,51 +593,51 @@ state 37
 
 state 38
 
-    (56) funcs -> func_header LLAVE_ABRE func_vars cuerpo . LLAVE_CIERRA PUNTO_Y_COMA
+    (59) funcs -> func_header LLAVE_ABRE func_vars cuerpo . LLAVE_CIERRA PUNTO_Y_COMA
 
     LLAVE_CIERRA    shift and go to state 60
 
 
 state 39
 
-    (60) func_tipo -> ID . DOS_PUNTOS tipo funcs_coma
+    (63) func_tipo -> ID . DOS_PUNTOS tipo funcs_coma
 
     DOS_PUNTOS      shift and go to state 61
 
 
 state 40
 
-    (55) func_header -> funcs_nt ID PAR_ABRE func_tipo . PAR_CIERRA
+    (58) func_header -> funcs_nt ID PAR_ABRE func_tipo . PAR_CIERRA
 
     PAR_CIERRA      shift and go to state 62
 
 
 state 41
 
-    (59) func_tipo -> empty .
+    (62) func_tipo -> empty .
 
-    PAR_CIERRA      reduce using rule 59 (func_tipo -> empty .)
+    PAR_CIERRA      reduce using rule 62 (func_tipo -> empty .)
 
 
 state 42
 
-    (50) vars_todo -> vars_coma DOS_PUNTOS tipo . PUNTO_Y_COMA vars_final
+    (53) vars_todo -> vars_coma DOS_PUNTOS tipo . PUNTO_Y_COMA vars_final
 
     PUNTO_Y_COMA    shift and go to state 63
 
 
 state 43
 
-    (52) vars_coma -> COMA ID vars_coma .
+    (55) vars_coma -> COMA ID vars_coma .
 
-    DOS_PUNTOS      reduce using rule 52 (vars_coma -> COMA ID vars_coma .)
+    DOS_PUNTOS      reduce using rule 55 (vars_coma -> COMA ID vars_coma .)
 
 
 state 44
 
-    (73) programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN .
+    (76) programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN .
 
-    $end            reduce using rule 73 (programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN .)
+    $end            reduce using rule 76 (programa -> PROGRAMA ID PUNTO_Y_COMA program_entry pro_vars pro_funcs INICIO program_main cuerpo FIN .)
 
 
 state 45
@@ -653,7 +659,7 @@ state 47
     (19) cuerpo_estat -> estatuto . cuerpo_estat
     (18) cuerpo_estat -> . empty
     (19) cuerpo_estat -> . estatuto cuerpo_estat
-    (82) empty -> .
+    (85) empty -> .
     (8) estatuto -> . asigna
     (9) estatuto -> . condicion
     (10) estatuto -> . ciclo
@@ -662,14 +668,14 @@ state 47
     (13) estatuto -> . retorno
     (14) estatuto -> . CORA_ABRE list_estatuto CORA_CIERRA
     (7) asigna -> . ID OP_ASIG expresion PUNTO_Y_COMA
-    (27) condicion -> . SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
-    (26) ciclo -> . MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
-    (35) llamada -> . ID PAR_ABRE llamada_expresion PAR_CIERRA
-    (30) imprime -> . ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA
+    (30) condicion -> . SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
+    (28) ciclo -> . MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
+    (38) llamada -> . ID PAR_ABRE llamada_expresion PAR_CIERRA
+    (33) imprime -> . ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA
     (5) retorno -> . RETURN expresion PUNTO_Y_COMA
     (6) retorno -> . RETURN PUNTO_Y_COMA
 
-    LLAVE_CIERRA    reduce using rule 82 (empty -> .)
+    LLAVE_CIERRA    reduce using rule 85 (empty -> .)
     CORA_ABRE       shift and go to state 54
     ID              shift and go to state 55
     SI              shift and go to state 56
@@ -769,7 +775,7 @@ state 54
     (14) estatuto -> CORA_ABRE . list_estatuto CORA_CIERRA
     (15) list_estatuto -> . empty
     (16) list_estatuto -> . estatuto list_estatuto
-    (82) empty -> .
+    (85) empty -> .
     (8) estatuto -> . asigna
     (9) estatuto -> . condicion
     (10) estatuto -> . ciclo
@@ -778,14 +784,14 @@ state 54
     (13) estatuto -> . retorno
     (14) estatuto -> . CORA_ABRE list_estatuto CORA_CIERRA
     (7) asigna -> . ID OP_ASIG expresion PUNTO_Y_COMA
-    (27) condicion -> . SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
-    (26) ciclo -> . MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
-    (35) llamada -> . ID PAR_ABRE llamada_expresion PAR_CIERRA
-    (30) imprime -> . ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA
+    (30) condicion -> . SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
+    (28) ciclo -> . MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
+    (38) llamada -> . ID PAR_ABRE llamada_expresion PAR_CIERRA
+    (33) imprime -> . ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA
     (5) retorno -> . RETURN expresion PUNTO_Y_COMA
     (6) retorno -> . RETURN PUNTO_Y_COMA
 
-    CORA_CIERRA     reduce using rule 82 (empty -> .)
+    CORA_CIERRA     reduce using rule 85 (empty -> .)
     CORA_ABRE       shift and go to state 54
     ID              shift and go to state 55
     SI              shift and go to state 56
@@ -806,7 +812,7 @@ state 54
 state 55
 
     (7) asigna -> ID . OP_ASIG expresion PUNTO_Y_COMA
-    (35) llamada -> ID . PAR_ABRE llamada_expresion PAR_CIERRA
+    (38) llamada -> ID . PAR_ABRE llamada_expresion PAR_CIERRA
 
     OP_ASIG         shift and go to state 70
     PAR_ABRE        shift and go to state 71
@@ -814,21 +820,23 @@ state 55
 
 state 56
 
-    (27) condicion -> SI . PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
+    (30) condicion -> SI . PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
 
     PAR_ABRE        shift and go to state 72
 
 
 state 57
 
-    (26) ciclo -> MIENTRAS . PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
+    (28) ciclo -> MIENTRAS . ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
+    (29) ciclo_marca -> .
 
-    PAR_ABRE        shift and go to state 73
+    PAR_ABRE        reduce using rule 29 (ciclo_marca -> .)
 
+    ciclo_marca                    shift and go to state 73
 
 state 58
 
-    (30) imprime -> ESCRIBE . PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA
+    (33) imprime -> ESCRIBE . PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA
 
     PAR_ABRE        shift and go to state 74
 
@@ -838,21 +846,21 @@ state 59
     (5) retorno -> RETURN . expresion PUNTO_Y_COMA
     (6) retorno -> RETURN . PUNTO_Y_COMA
     (20) expresion -> . exp expresion_exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
     PUNTO_Y_COMA    shift and go to state 76
     PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
     OP_SUMA         shift and go to state 84
     OP_RESTA        shift and go to state 85
 
@@ -866,14 +874,14 @@ state 59
 
 state 60
 
-    (56) funcs -> func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA . PUNTO_Y_COMA
+    (59) funcs -> func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA . PUNTO_Y_COMA
 
     PUNTO_Y_COMA    shift and go to state 86
 
 
 state 61
 
-    (60) func_tipo -> ID DOS_PUNTOS . tipo funcs_coma
+    (63) func_tipo -> ID DOS_PUNTOS . tipo funcs_coma
     (1) tipo -> . ENTERO
     (2) tipo -> . FLOTANTE
 
@@ -884,27 +892,27 @@ state 61
 
 state 62
 
-    (55) func_header -> funcs_nt ID PAR_ABRE func_tipo PAR_CIERRA .
+    (58) func_header -> funcs_nt ID PAR_ABRE func_tipo PAR_CIERRA .
 
-    LLAVE_ABRE      reduce using rule 55 (func_header -> funcs_nt ID PAR_ABRE func_tipo PAR_CIERRA .)
+    LLAVE_ABRE      reduce using rule 58 (func_header -> funcs_nt ID PAR_ABRE func_tipo PAR_CIERRA .)
 
 
 state 63
 
-    (50) vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA . vars_final
-    (53) vars_final -> . empty
-    (54) vars_final -> . vars_todo
-    (82) empty -> .
-    (50) vars_todo -> . vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final
-    (51) vars_coma -> . empty
-    (52) vars_coma -> . COMA ID vars_coma
+    (53) vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA . vars_final
+    (56) vars_final -> . empty
+    (57) vars_final -> . vars_todo
+    (85) empty -> .
+    (53) vars_todo -> . vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final
+    (54) vars_coma -> . empty
+    (55) vars_coma -> . COMA ID vars_coma
 
-    NULA            reduce using rule 82 (empty -> .)
-    ENTERO          reduce using rule 82 (empty -> .)
-    FLOTANTE        reduce using rule 82 (empty -> .)
-    INICIO          reduce using rule 82 (empty -> .)
-    LLAVE_ABRE      reduce using rule 82 (empty -> .)
-    DOS_PUNTOS      reduce using rule 82 (empty -> .)
+    NULA            reduce using rule 85 (empty -> .)
+    ENTERO          reduce using rule 85 (empty -> .)
+    FLOTANTE        reduce using rule 85 (empty -> .)
+    INICIO          reduce using rule 85 (empty -> .)
+    LLAVE_ABRE      reduce using rule 85 (empty -> .)
+    DOS_PUNTOS      reduce using rule 85 (empty -> .)
     COMA            shift and go to state 28
 
     vars_coma                      shift and go to state 26
@@ -962,7 +970,7 @@ state 69
     (16) list_estatuto -> estatuto . list_estatuto
     (15) list_estatuto -> . empty
     (16) list_estatuto -> . estatuto list_estatuto
-    (82) empty -> .
+    (85) empty -> .
     (8) estatuto -> . asigna
     (9) estatuto -> . condicion
     (10) estatuto -> . ciclo
@@ -971,14 +979,14 @@ state 69
     (13) estatuto -> . retorno
     (14) estatuto -> . CORA_ABRE list_estatuto CORA_CIERRA
     (7) asigna -> . ID OP_ASIG expresion PUNTO_Y_COMA
-    (27) condicion -> . SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
-    (26) ciclo -> . MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
-    (35) llamada -> . ID PAR_ABRE llamada_expresion PAR_CIERRA
-    (30) imprime -> . ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA
+    (30) condicion -> . SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
+    (28) ciclo -> . MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
+    (38) llamada -> . ID PAR_ABRE llamada_expresion PAR_CIERRA
+    (33) imprime -> . ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA
     (5) retorno -> . RETURN expresion PUNTO_Y_COMA
     (6) retorno -> . RETURN PUNTO_Y_COMA
 
-    CORA_CIERRA     reduce using rule 82 (empty -> .)
+    CORA_CIERRA     reduce using rule 85 (empty -> .)
     CORA_ABRE       shift and go to state 54
     ID              shift and go to state 55
     SI              shift and go to state 56
@@ -1000,20 +1008,20 @@ state 70
 
     (7) asigna -> ID OP_ASIG . expresion PUNTO_Y_COMA
     (20) expresion -> . exp expresion_exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
     PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
     OP_SUMA         shift and go to state 84
     OP_RESTA        shift and go to state 85
 
@@ -1027,24 +1035,24 @@ state 70
 
 state 71
 
-    (35) llamada -> ID PAR_ABRE . llamada_expresion PAR_CIERRA
-    (36) llamada_expresion -> . empty
-    (37) llamada_expresion -> . expresion llamada_ex
-    (82) empty -> .
+    (38) llamada -> ID PAR_ABRE . llamada_expresion PAR_CIERRA
+    (39) llamada_expresion -> . empty
+    (40) llamada_expresion -> . expresion llamada_ex
+    (85) empty -> .
     (20) expresion -> . exp expresion_exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
-    PAR_CIERRA      reduce using rule 82 (empty -> .)
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
+    PAR_CIERRA      reduce using rule 85 (empty -> .)
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
     PAR_ABRE        shift and go to state 80
     OP_SUMA         shift and go to state 84
     OP_RESTA        shift and go to state 85
@@ -1060,22 +1068,22 @@ state 71
 
 state 72
 
-    (27) condicion -> SI PAR_ABRE . expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
+    (30) condicion -> SI PAR_ABRE . expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
     (20) expresion -> . exp expresion_exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
     PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
     OP_SUMA         shift and go to state 84
     OP_RESTA        shift and go to state 85
 
@@ -1089,54 +1097,32 @@ state 72
 
 state 73
 
-    (26) ciclo -> MIENTRAS PAR_ABRE . expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
-    (20) expresion -> . exp expresion_exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (28) ciclo -> MIENTRAS ciclo_marca . PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
 
-    PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
-    OP_SUMA         shift and go to state 84
-    OP_RESTA        shift and go to state 85
+    PAR_ABRE        shift and go to state 98
 
-    expresion                      shift and go to state 98
-    exp                            shift and go to state 77
-    termino                        shift and go to state 78
-    factor                         shift and go to state 79
-    factor_sr                      shift and go to state 81
-    empty                          shift and go to state 82
-    factor_rs                      shift and go to state 83
 
 state 74
 
-    (30) imprime -> ESCRIBE PAR_ABRE . imprime_exp PAR_CIERRA PUNTO_Y_COMA
-    (31) imprime_exp -> . expresion imprime_exp_p
-    (32) imprime_exp -> . LETRERO imprime_exp_p
+    (33) imprime -> ESCRIBE PAR_ABRE . imprime_exp PAR_CIERRA PUNTO_Y_COMA
+    (34) imprime_exp -> . expresion imprime_exp_p
+    (35) imprime_exp -> . LETRERO imprime_exp_p
     (20) expresion -> . exp expresion_exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
     LETRERO         shift and go to state 101
     PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
     OP_SUMA         shift and go to state 84
     OP_RESTA        shift and go to state 85
 
@@ -1176,87 +1162,95 @@ state 77
     (21) expresion_exp -> . empty
     (22) expresion_exp -> . OP_MAYOR exp
     (23) expresion_exp -> . OP_MENOR exp
-    (24) expresion_exp -> . OP_DIF exp
-    (25) expresion_exp -> . OP_IGUAL exp
-    (82) empty -> .
+    (24) expresion_exp -> . OP_MAYORIGUAL exp
+    (25) expresion_exp -> . OP_MENORIGUAL exp
+    (26) expresion_exp -> . OP_DIF exp
+    (27) expresion_exp -> . OP_IGUAL exp
+    (85) empty -> .
 
     OP_MAYOR        shift and go to state 105
     OP_MENOR        shift and go to state 106
-    OP_DIF          shift and go to state 107
-    OP_IGUAL        shift and go to state 108
-    PUNTO_Y_COMA    reduce using rule 82 (empty -> .)
-    COMA            reduce using rule 82 (empty -> .)
-    PAR_CIERRA      reduce using rule 82 (empty -> .)
+    OP_MAYORIGUAL   shift and go to state 107
+    OP_MENORIGUAL   shift and go to state 108
+    OP_DIF          shift and go to state 109
+    OP_IGUAL        shift and go to state 110
+    PUNTO_Y_COMA    reduce using rule 85 (empty -> .)
+    COMA            reduce using rule 85 (empty -> .)
+    PAR_CIERRA      reduce using rule 85 (empty -> .)
 
     expresion_exp                  shift and go to state 103
     empty                          shift and go to state 104
 
 state 78
 
-    (65) exp -> termino . exp_termino
-    (66) exp_termino -> . empty
-    (67) exp_termino -> . OP_SUMA exp
-    (68) exp_termino -> . OP_RESTA exp
-    (82) empty -> .
+    (68) exp -> termino . exp_termino
+    (69) exp_termino -> . empty
+    (70) exp_termino -> . OP_SUMA exp
+    (71) exp_termino -> . OP_RESTA exp
+    (85) empty -> .
 
-    OP_SUMA         shift and go to state 111
-    OP_RESTA        shift and go to state 112
-    OP_MAYOR        reduce using rule 82 (empty -> .)
-    OP_MENOR        reduce using rule 82 (empty -> .)
-    OP_DIF          reduce using rule 82 (empty -> .)
-    OP_IGUAL        reduce using rule 82 (empty -> .)
-    PUNTO_Y_COMA    reduce using rule 82 (empty -> .)
-    COMA            reduce using rule 82 (empty -> .)
-    PAR_CIERRA      reduce using rule 82 (empty -> .)
+    OP_SUMA         shift and go to state 113
+    OP_RESTA        shift and go to state 114
+    OP_MAYOR        reduce using rule 85 (empty -> .)
+    OP_MENOR        reduce using rule 85 (empty -> .)
+    OP_MAYORIGUAL   reduce using rule 85 (empty -> .)
+    OP_MENORIGUAL   reduce using rule 85 (empty -> .)
+    OP_DIF          reduce using rule 85 (empty -> .)
+    OP_IGUAL        reduce using rule 85 (empty -> .)
+    PUNTO_Y_COMA    reduce using rule 85 (empty -> .)
+    COMA            reduce using rule 85 (empty -> .)
+    PAR_CIERRA      reduce using rule 85 (empty -> .)
 
-    exp_termino                    shift and go to state 109
-    empty                          shift and go to state 110
+    exp_termino                    shift and go to state 111
+    empty                          shift and go to state 112
 
 state 79
 
-    (69) termino -> factor . termino_factor
-    (70) termino_factor -> . empty
-    (71) termino_factor -> . OP_MULT termino
-    (72) termino_factor -> . OP_DIV termino
-    (82) empty -> .
+    (72) termino -> factor . termino_factor
+    (73) termino_factor -> . empty
+    (74) termino_factor -> . OP_MULT termino
+    (75) termino_factor -> . OP_DIV termino
+    (85) empty -> .
 
-    OP_MULT         shift and go to state 115
-    OP_DIV          shift and go to state 116
-    OP_SUMA         reduce using rule 82 (empty -> .)
-    OP_RESTA        reduce using rule 82 (empty -> .)
-    OP_MAYOR        reduce using rule 82 (empty -> .)
-    OP_MENOR        reduce using rule 82 (empty -> .)
-    OP_DIF          reduce using rule 82 (empty -> .)
-    OP_IGUAL        reduce using rule 82 (empty -> .)
-    PUNTO_Y_COMA    reduce using rule 82 (empty -> .)
-    COMA            reduce using rule 82 (empty -> .)
-    PAR_CIERRA      reduce using rule 82 (empty -> .)
+    OP_MULT         shift and go to state 117
+    OP_DIV          shift and go to state 118
+    OP_SUMA         reduce using rule 85 (empty -> .)
+    OP_RESTA        reduce using rule 85 (empty -> .)
+    OP_MAYOR        reduce using rule 85 (empty -> .)
+    OP_MENOR        reduce using rule 85 (empty -> .)
+    OP_MAYORIGUAL   reduce using rule 85 (empty -> .)
+    OP_MENORIGUAL   reduce using rule 85 (empty -> .)
+    OP_DIF          reduce using rule 85 (empty -> .)
+    OP_IGUAL        reduce using rule 85 (empty -> .)
+    PUNTO_Y_COMA    reduce using rule 85 (empty -> .)
+    COMA            reduce using rule 85 (empty -> .)
+    PAR_CIERRA      reduce using rule 85 (empty -> .)
 
-    termino_factor                 shift and go to state 113
-    empty                          shift and go to state 114
+    termino_factor                 shift and go to state 115
+    empty                          shift and go to state 116
 
 state 80
 
-    (40) factor -> PAR_ABRE . expresion PAR_CIERRA
+    (43) factor -> PAR_ABRE . expresion PAR_CIERRA
     (20) expresion -> . exp expresion_exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
     PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
     OP_SUMA         shift and go to state 84
     OP_RESTA        shift and go to state 85
 
-    expresion                      shift and go to state 117
+    expresion                      shift and go to state 119
     exp                            shift and go to state 77
     termino                        shift and go to state 78
     factor                         shift and go to state 79
@@ -1266,114 +1260,114 @@ state 80
 
 state 81
 
-    (41) factor -> factor_sr . factor_cte
-    (46) factor_cte -> . ID
-    (47) factor_cte -> . cte
-    (48) factor_cte -> . llamada
+    (44) factor -> factor_sr . factor_cte
+    (49) factor_cte -> . ID
+    (50) factor_cte -> . cte
+    (51) factor_cte -> . llamada
     (3) cte -> . CTE_ENT
     (4) cte -> . CTE_FLOT
-    (35) llamada -> . ID PAR_ABRE llamada_expresion PAR_CIERRA
+    (38) llamada -> . ID PAR_ABRE llamada_expresion PAR_CIERRA
 
-    ID              shift and go to state 119
-    CTE_ENT         shift and go to state 122
-    CTE_FLOT        shift and go to state 123
+    ID              shift and go to state 121
+    CTE_ENT         shift and go to state 124
+    CTE_FLOT        shift and go to state 125
 
-    factor_cte                     shift and go to state 118
-    cte                            shift and go to state 120
-    llamada                        shift and go to state 121
+    factor_cte                     shift and go to state 120
+    cte                            shift and go to state 122
+    llamada                        shift and go to state 123
 
 state 82
 
-    (42) factor_sr -> empty .
+    (45) factor_sr -> empty .
 
-    ID              reduce using rule 42 (factor_sr -> empty .)
-    CTE_ENT         reduce using rule 42 (factor_sr -> empty .)
-    CTE_FLOT        reduce using rule 42 (factor_sr -> empty .)
+    ID              reduce using rule 45 (factor_sr -> empty .)
+    CTE_ENT         reduce using rule 45 (factor_sr -> empty .)
+    CTE_FLOT        reduce using rule 45 (factor_sr -> empty .)
 
 
 state 83
 
-    (43) factor_sr -> factor_rs .
+    (46) factor_sr -> factor_rs .
 
-    ID              reduce using rule 43 (factor_sr -> factor_rs .)
-    CTE_ENT         reduce using rule 43 (factor_sr -> factor_rs .)
-    CTE_FLOT        reduce using rule 43 (factor_sr -> factor_rs .)
+    ID              reduce using rule 46 (factor_sr -> factor_rs .)
+    CTE_ENT         reduce using rule 46 (factor_sr -> factor_rs .)
+    CTE_FLOT        reduce using rule 46 (factor_sr -> factor_rs .)
 
 
 state 84
 
-    (44) factor_rs -> OP_SUMA .
+    (47) factor_rs -> OP_SUMA .
 
-    ID              reduce using rule 44 (factor_rs -> OP_SUMA .)
-    CTE_ENT         reduce using rule 44 (factor_rs -> OP_SUMA .)
-    CTE_FLOT        reduce using rule 44 (factor_rs -> OP_SUMA .)
+    ID              reduce using rule 47 (factor_rs -> OP_SUMA .)
+    CTE_ENT         reduce using rule 47 (factor_rs -> OP_SUMA .)
+    CTE_FLOT        reduce using rule 47 (factor_rs -> OP_SUMA .)
 
 
 state 85
 
-    (45) factor_rs -> OP_RESTA .
+    (48) factor_rs -> OP_RESTA .
 
-    ID              reduce using rule 45 (factor_rs -> OP_RESTA .)
-    CTE_ENT         reduce using rule 45 (factor_rs -> OP_RESTA .)
-    CTE_FLOT        reduce using rule 45 (factor_rs -> OP_RESTA .)
+    ID              reduce using rule 48 (factor_rs -> OP_RESTA .)
+    CTE_ENT         reduce using rule 48 (factor_rs -> OP_RESTA .)
+    CTE_FLOT        reduce using rule 48 (factor_rs -> OP_RESTA .)
 
 
 state 86
 
-    (56) funcs -> func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA .
+    (59) funcs -> func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA .
 
-    NULA            reduce using rule 56 (funcs -> func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA .)
-    ENTERO          reduce using rule 56 (funcs -> func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA .)
-    FLOTANTE        reduce using rule 56 (funcs -> func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA .)
-    INICIO          reduce using rule 56 (funcs -> func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA .)
+    NULA            reduce using rule 59 (funcs -> func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA .)
+    ENTERO          reduce using rule 59 (funcs -> func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA .)
+    FLOTANTE        reduce using rule 59 (funcs -> func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA .)
+    INICIO          reduce using rule 59 (funcs -> func_header LLAVE_ABRE func_vars cuerpo LLAVE_CIERRA PUNTO_Y_COMA .)
 
 
 state 87
 
-    (60) func_tipo -> ID DOS_PUNTOS tipo . funcs_coma
-    (61) funcs_coma -> . empty
-    (62) funcs_coma -> . COMA ID DOS_PUNTOS tipo funcs_coma
-    (82) empty -> .
+    (63) func_tipo -> ID DOS_PUNTOS tipo . funcs_coma
+    (64) funcs_coma -> . empty
+    (65) funcs_coma -> . COMA ID DOS_PUNTOS tipo funcs_coma
+    (85) empty -> .
 
-    COMA            shift and go to state 126
-    PAR_CIERRA      reduce using rule 82 (empty -> .)
+    COMA            shift and go to state 128
+    PAR_CIERRA      reduce using rule 85 (empty -> .)
 
-    funcs_coma                     shift and go to state 124
-    empty                          shift and go to state 125
+    funcs_coma                     shift and go to state 126
+    empty                          shift and go to state 127
 
 state 88
 
-    (50) vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final .
+    (53) vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final .
 
-    NULA            reduce using rule 50 (vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final .)
-    ENTERO          reduce using rule 50 (vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final .)
-    FLOTANTE        reduce using rule 50 (vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final .)
-    INICIO          reduce using rule 50 (vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final .)
-    LLAVE_ABRE      reduce using rule 50 (vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final .)
+    NULA            reduce using rule 53 (vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final .)
+    ENTERO          reduce using rule 53 (vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final .)
+    FLOTANTE        reduce using rule 53 (vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final .)
+    INICIO          reduce using rule 53 (vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final .)
+    LLAVE_ABRE      reduce using rule 53 (vars_todo -> vars_coma DOS_PUNTOS tipo PUNTO_Y_COMA vars_final .)
 
 
 state 89
 
-    (53) vars_final -> empty .
-    (51) vars_coma -> empty .
+    (56) vars_final -> empty .
+    (54) vars_coma -> empty .
 
-    NULA            reduce using rule 53 (vars_final -> empty .)
-    ENTERO          reduce using rule 53 (vars_final -> empty .)
-    FLOTANTE        reduce using rule 53 (vars_final -> empty .)
-    INICIO          reduce using rule 53 (vars_final -> empty .)
-    LLAVE_ABRE      reduce using rule 53 (vars_final -> empty .)
-    DOS_PUNTOS      reduce using rule 51 (vars_coma -> empty .)
+    NULA            reduce using rule 56 (vars_final -> empty .)
+    ENTERO          reduce using rule 56 (vars_final -> empty .)
+    FLOTANTE        reduce using rule 56 (vars_final -> empty .)
+    INICIO          reduce using rule 56 (vars_final -> empty .)
+    LLAVE_ABRE      reduce using rule 56 (vars_final -> empty .)
+    DOS_PUNTOS      reduce using rule 54 (vars_coma -> empty .)
 
 
 state 90
 
-    (54) vars_final -> vars_todo .
+    (57) vars_final -> vars_todo .
 
-    NULA            reduce using rule 54 (vars_final -> vars_todo .)
-    ENTERO          reduce using rule 54 (vars_final -> vars_todo .)
-    FLOTANTE        reduce using rule 54 (vars_final -> vars_todo .)
-    INICIO          reduce using rule 54 (vars_final -> vars_todo .)
-    LLAVE_ABRE      reduce using rule 54 (vars_final -> vars_todo .)
+    NULA            reduce using rule 57 (vars_final -> vars_todo .)
+    ENTERO          reduce using rule 57 (vars_final -> vars_todo .)
+    FLOTANTE        reduce using rule 57 (vars_final -> vars_todo .)
+    INICIO          reduce using rule 57 (vars_final -> vars_todo .)
+    LLAVE_ABRE      reduce using rule 57 (vars_final -> vars_todo .)
 
 
 state 91
@@ -1401,86 +1395,108 @@ state 93
 
     (7) asigna -> ID OP_ASIG expresion . PUNTO_Y_COMA
 
-    PUNTO_Y_COMA    shift and go to state 127
+    PUNTO_Y_COMA    shift and go to state 129
 
 
 state 94
 
-    (35) llamada -> ID PAR_ABRE llamada_expresion . PAR_CIERRA
+    (38) llamada -> ID PAR_ABRE llamada_expresion . PAR_CIERRA
 
-    PAR_CIERRA      shift and go to state 128
+    PAR_CIERRA      shift and go to state 130
 
 
 state 95
 
-    (36) llamada_expresion -> empty .
-    (42) factor_sr -> empty .
+    (39) llamada_expresion -> empty .
+    (45) factor_sr -> empty .
 
-    PAR_CIERRA      reduce using rule 36 (llamada_expresion -> empty .)
-    ID              reduce using rule 42 (factor_sr -> empty .)
-    CTE_ENT         reduce using rule 42 (factor_sr -> empty .)
-    CTE_FLOT        reduce using rule 42 (factor_sr -> empty .)
+    PAR_CIERRA      reduce using rule 39 (llamada_expresion -> empty .)
+    ID              reduce using rule 45 (factor_sr -> empty .)
+    CTE_ENT         reduce using rule 45 (factor_sr -> empty .)
+    CTE_FLOT        reduce using rule 45 (factor_sr -> empty .)
 
 
 state 96
 
-    (37) llamada_expresion -> expresion . llamada_ex
-    (38) llamada_ex -> . empty
-    (39) llamada_ex -> . COMA expresion llamada_ex
-    (82) empty -> .
+    (40) llamada_expresion -> expresion . llamada_ex
+    (41) llamada_ex -> . empty
+    (42) llamada_ex -> . COMA expresion llamada_ex
+    (85) empty -> .
 
-    COMA            shift and go to state 131
-    PAR_CIERRA      reduce using rule 82 (empty -> .)
+    COMA            shift and go to state 133
+    PAR_CIERRA      reduce using rule 85 (empty -> .)
 
-    llamada_ex                     shift and go to state 129
-    empty                          shift and go to state 130
+    llamada_ex                     shift and go to state 131
+    empty                          shift and go to state 132
 
 state 97
 
-    (27) condicion -> SI PAR_ABRE expresion . PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
-
-    PAR_CIERRA      shift and go to state 132
-
-
-state 98
-
-    (26) ciclo -> MIENTRAS PAR_ABRE expresion . PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
-
-    PAR_CIERRA      shift and go to state 133
-
-
-state 99
-
-    (30) imprime -> ESCRIBE PAR_ABRE imprime_exp . PAR_CIERRA PUNTO_Y_COMA
+    (30) condicion -> SI PAR_ABRE expresion . PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA
 
     PAR_CIERRA      shift and go to state 134
 
 
+state 98
+
+    (28) ciclo -> MIENTRAS ciclo_marca PAR_ABRE . expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
+    (20) expresion -> . exp expresion_exp
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
+
+    PAR_ABRE        shift and go to state 80
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
+    OP_SUMA         shift and go to state 84
+    OP_RESTA        shift and go to state 85
+
+    expresion                      shift and go to state 135
+    exp                            shift and go to state 77
+    termino                        shift and go to state 78
+    factor                         shift and go to state 79
+    factor_sr                      shift and go to state 81
+    empty                          shift and go to state 82
+    factor_rs                      shift and go to state 83
+
+state 99
+
+    (33) imprime -> ESCRIBE PAR_ABRE imprime_exp . PAR_CIERRA PUNTO_Y_COMA
+
+    PAR_CIERRA      shift and go to state 136
+
+
 state 100
 
-    (31) imprime_exp -> expresion . imprime_exp_p
-    (33) imprime_exp_p -> . empty
-    (34) imprime_exp_p -> . COMA imprime_exp
-    (82) empty -> .
+    (34) imprime_exp -> expresion . imprime_exp_p
+    (36) imprime_exp_p -> . empty
+    (37) imprime_exp_p -> . COMA imprime_exp
+    (85) empty -> .
 
-    COMA            shift and go to state 137
-    PAR_CIERRA      reduce using rule 82 (empty -> .)
+    COMA            shift and go to state 139
+    PAR_CIERRA      reduce using rule 85 (empty -> .)
 
-    imprime_exp_p                  shift and go to state 135
-    empty                          shift and go to state 136
+    imprime_exp_p                  shift and go to state 137
+    empty                          shift and go to state 138
 
 state 101
 
-    (32) imprime_exp -> LETRERO . imprime_exp_p
-    (33) imprime_exp_p -> . empty
-    (34) imprime_exp_p -> . COMA imprime_exp
-    (82) empty -> .
+    (35) imprime_exp -> LETRERO . imprime_exp_p
+    (36) imprime_exp_p -> . empty
+    (37) imprime_exp_p -> . COMA imprime_exp
+    (85) empty -> .
 
-    COMA            shift and go to state 137
-    PAR_CIERRA      reduce using rule 82 (empty -> .)
+    COMA            shift and go to state 139
+    PAR_CIERRA      reduce using rule 85 (empty -> .)
 
-    imprime_exp_p                  shift and go to state 138
-    empty                          shift and go to state 136
+    imprime_exp_p                  shift and go to state 140
+    empty                          shift and go to state 138
 
 state 102
 
@@ -1517,74 +1533,20 @@ state 104
 state 105
 
     (22) expresion_exp -> OP_MAYOR . exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
     PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
-    OP_SUMA         shift and go to state 84
-    OP_RESTA        shift and go to state 85
-
-    exp                            shift and go to state 139
-    termino                        shift and go to state 78
-    factor                         shift and go to state 79
-    factor_sr                      shift and go to state 81
-    empty                          shift and go to state 82
-    factor_rs                      shift and go to state 83
-
-state 106
-
-    (23) expresion_exp -> OP_MENOR . exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
-
-    PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
-    OP_SUMA         shift and go to state 84
-    OP_RESTA        shift and go to state 85
-
-    exp                            shift and go to state 140
-    termino                        shift and go to state 78
-    factor                         shift and go to state 79
-    factor_sr                      shift and go to state 81
-    empty                          shift and go to state 82
-    factor_rs                      shift and go to state 83
-
-state 107
-
-    (24) expresion_exp -> OP_DIF . exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
-
-    PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
     OP_SUMA         shift and go to state 84
     OP_RESTA        shift and go to state 85
 
@@ -1595,23 +1557,23 @@ state 107
     empty                          shift and go to state 82
     factor_rs                      shift and go to state 83
 
-state 108
+state 106
 
-    (25) expresion_exp -> OP_IGUAL . exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (23) expresion_exp -> OP_MENOR . exp
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
     PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
     OP_SUMA         shift and go to state 84
     OP_RESTA        shift and go to state 85
 
@@ -1622,49 +1584,23 @@ state 108
     empty                          shift and go to state 82
     factor_rs                      shift and go to state 83
 
-state 109
+state 107
 
-    (65) exp -> termino exp_termino .
-
-    OP_MAYOR        reduce using rule 65 (exp -> termino exp_termino .)
-    OP_MENOR        reduce using rule 65 (exp -> termino exp_termino .)
-    OP_DIF          reduce using rule 65 (exp -> termino exp_termino .)
-    OP_IGUAL        reduce using rule 65 (exp -> termino exp_termino .)
-    PUNTO_Y_COMA    reduce using rule 65 (exp -> termino exp_termino .)
-    COMA            reduce using rule 65 (exp -> termino exp_termino .)
-    PAR_CIERRA      reduce using rule 65 (exp -> termino exp_termino .)
-
-
-state 110
-
-    (66) exp_termino -> empty .
-
-    OP_MAYOR        reduce using rule 66 (exp_termino -> empty .)
-    OP_MENOR        reduce using rule 66 (exp_termino -> empty .)
-    OP_DIF          reduce using rule 66 (exp_termino -> empty .)
-    OP_IGUAL        reduce using rule 66 (exp_termino -> empty .)
-    PUNTO_Y_COMA    reduce using rule 66 (exp_termino -> empty .)
-    COMA            reduce using rule 66 (exp_termino -> empty .)
-    PAR_CIERRA      reduce using rule 66 (exp_termino -> empty .)
-
-
-state 111
-
-    (67) exp_termino -> OP_SUMA . exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (24) expresion_exp -> OP_MAYORIGUAL . exp
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
     PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
     OP_SUMA         shift and go to state 84
     OP_RESTA        shift and go to state 85
 
@@ -1675,23 +1611,23 @@ state 111
     empty                          shift and go to state 82
     factor_rs                      shift and go to state 83
 
-state 112
+state 108
 
-    (68) exp_termino -> OP_RESTA . exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (25) expresion_exp -> OP_MENORIGUAL . exp
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
     PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
     OP_SUMA         shift and go to state 84
     OP_RESTA        shift and go to state 85
 
@@ -1702,164 +1638,314 @@ state 112
     empty                          shift and go to state 82
     factor_rs                      shift and go to state 83
 
+state 109
+
+    (26) expresion_exp -> OP_DIF . exp
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
+
+    PAR_ABRE        shift and go to state 80
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
+    OP_SUMA         shift and go to state 84
+    OP_RESTA        shift and go to state 85
+
+    exp                            shift and go to state 145
+    termino                        shift and go to state 78
+    factor                         shift and go to state 79
+    factor_sr                      shift and go to state 81
+    empty                          shift and go to state 82
+    factor_rs                      shift and go to state 83
+
+state 110
+
+    (27) expresion_exp -> OP_IGUAL . exp
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
+
+    PAR_ABRE        shift and go to state 80
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
+    OP_SUMA         shift and go to state 84
+    OP_RESTA        shift and go to state 85
+
+    exp                            shift and go to state 146
+    termino                        shift and go to state 78
+    factor                         shift and go to state 79
+    factor_sr                      shift and go to state 81
+    empty                          shift and go to state 82
+    factor_rs                      shift and go to state 83
+
+state 111
+
+    (68) exp -> termino exp_termino .
+
+    OP_MAYOR        reduce using rule 68 (exp -> termino exp_termino .)
+    OP_MENOR        reduce using rule 68 (exp -> termino exp_termino .)
+    OP_MAYORIGUAL   reduce using rule 68 (exp -> termino exp_termino .)
+    OP_MENORIGUAL   reduce using rule 68 (exp -> termino exp_termino .)
+    OP_DIF          reduce using rule 68 (exp -> termino exp_termino .)
+    OP_IGUAL        reduce using rule 68 (exp -> termino exp_termino .)
+    PUNTO_Y_COMA    reduce using rule 68 (exp -> termino exp_termino .)
+    COMA            reduce using rule 68 (exp -> termino exp_termino .)
+    PAR_CIERRA      reduce using rule 68 (exp -> termino exp_termino .)
+
+
+state 112
+
+    (69) exp_termino -> empty .
+
+    OP_MAYOR        reduce using rule 69 (exp_termino -> empty .)
+    OP_MENOR        reduce using rule 69 (exp_termino -> empty .)
+    OP_MAYORIGUAL   reduce using rule 69 (exp_termino -> empty .)
+    OP_MENORIGUAL   reduce using rule 69 (exp_termino -> empty .)
+    OP_DIF          reduce using rule 69 (exp_termino -> empty .)
+    OP_IGUAL        reduce using rule 69 (exp_termino -> empty .)
+    PUNTO_Y_COMA    reduce using rule 69 (exp_termino -> empty .)
+    COMA            reduce using rule 69 (exp_termino -> empty .)
+    PAR_CIERRA      reduce using rule 69 (exp_termino -> empty .)
+
+
 state 113
 
-    (69) termino -> factor termino_factor .
+    (70) exp_termino -> OP_SUMA . exp
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
-    OP_SUMA         reduce using rule 69 (termino -> factor termino_factor .)
-    OP_RESTA        reduce using rule 69 (termino -> factor termino_factor .)
-    OP_MAYOR        reduce using rule 69 (termino -> factor termino_factor .)
-    OP_MENOR        reduce using rule 69 (termino -> factor termino_factor .)
-    OP_DIF          reduce using rule 69 (termino -> factor termino_factor .)
-    OP_IGUAL        reduce using rule 69 (termino -> factor termino_factor .)
-    PUNTO_Y_COMA    reduce using rule 69 (termino -> factor termino_factor .)
-    COMA            reduce using rule 69 (termino -> factor termino_factor .)
-    PAR_CIERRA      reduce using rule 69 (termino -> factor termino_factor .)
+    PAR_ABRE        shift and go to state 80
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
+    OP_SUMA         shift and go to state 84
+    OP_RESTA        shift and go to state 85
 
+    exp                            shift and go to state 147
+    termino                        shift and go to state 78
+    factor                         shift and go to state 79
+    factor_sr                      shift and go to state 81
+    empty                          shift and go to state 82
+    factor_rs                      shift and go to state 83
 
 state 114
 
-    (70) termino_factor -> empty .
+    (71) exp_termino -> OP_RESTA . exp
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
-    OP_SUMA         reduce using rule 70 (termino_factor -> empty .)
-    OP_RESTA        reduce using rule 70 (termino_factor -> empty .)
-    OP_MAYOR        reduce using rule 70 (termino_factor -> empty .)
-    OP_MENOR        reduce using rule 70 (termino_factor -> empty .)
-    OP_DIF          reduce using rule 70 (termino_factor -> empty .)
-    OP_IGUAL        reduce using rule 70 (termino_factor -> empty .)
-    PUNTO_Y_COMA    reduce using rule 70 (termino_factor -> empty .)
-    COMA            reduce using rule 70 (termino_factor -> empty .)
-    PAR_CIERRA      reduce using rule 70 (termino_factor -> empty .)
+    PAR_ABRE        shift and go to state 80
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
+    OP_SUMA         shift and go to state 84
+    OP_RESTA        shift and go to state 85
 
+    exp                            shift and go to state 148
+    termino                        shift and go to state 78
+    factor                         shift and go to state 79
+    factor_sr                      shift and go to state 81
+    empty                          shift and go to state 82
+    factor_rs                      shift and go to state 83
 
 state 115
 
-    (71) termino_factor -> OP_MULT . termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (72) termino -> factor termino_factor .
 
-    PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
-    OP_SUMA         shift and go to state 84
-    OP_RESTA        shift and go to state 85
+    OP_SUMA         reduce using rule 72 (termino -> factor termino_factor .)
+    OP_RESTA        reduce using rule 72 (termino -> factor termino_factor .)
+    OP_MAYOR        reduce using rule 72 (termino -> factor termino_factor .)
+    OP_MENOR        reduce using rule 72 (termino -> factor termino_factor .)
+    OP_MAYORIGUAL   reduce using rule 72 (termino -> factor termino_factor .)
+    OP_MENORIGUAL   reduce using rule 72 (termino -> factor termino_factor .)
+    OP_DIF          reduce using rule 72 (termino -> factor termino_factor .)
+    OP_IGUAL        reduce using rule 72 (termino -> factor termino_factor .)
+    PUNTO_Y_COMA    reduce using rule 72 (termino -> factor termino_factor .)
+    COMA            reduce using rule 72 (termino -> factor termino_factor .)
+    PAR_CIERRA      reduce using rule 72 (termino -> factor termino_factor .)
 
-    termino                        shift and go to state 145
-    factor                         shift and go to state 79
-    factor_sr                      shift and go to state 81
-    empty                          shift and go to state 82
-    factor_rs                      shift and go to state 83
 
 state 116
 
-    (72) termino_factor -> OP_DIV . termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (73) termino_factor -> empty .
+
+    OP_SUMA         reduce using rule 73 (termino_factor -> empty .)
+    OP_RESTA        reduce using rule 73 (termino_factor -> empty .)
+    OP_MAYOR        reduce using rule 73 (termino_factor -> empty .)
+    OP_MENOR        reduce using rule 73 (termino_factor -> empty .)
+    OP_MAYORIGUAL   reduce using rule 73 (termino_factor -> empty .)
+    OP_MENORIGUAL   reduce using rule 73 (termino_factor -> empty .)
+    OP_DIF          reduce using rule 73 (termino_factor -> empty .)
+    OP_IGUAL        reduce using rule 73 (termino_factor -> empty .)
+    PUNTO_Y_COMA    reduce using rule 73 (termino_factor -> empty .)
+    COMA            reduce using rule 73 (termino_factor -> empty .)
+    PAR_CIERRA      reduce using rule 73 (termino_factor -> empty .)
+
+
+state 117
+
+    (74) termino_factor -> OP_MULT . termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
     PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
     OP_SUMA         shift and go to state 84
     OP_RESTA        shift and go to state 85
 
-    termino                        shift and go to state 146
+    termino                        shift and go to state 149
     factor                         shift and go to state 79
     factor_sr                      shift and go to state 81
     empty                          shift and go to state 82
     factor_rs                      shift and go to state 83
 
-state 117
-
-    (40) factor -> PAR_ABRE expresion . PAR_CIERRA
-
-    PAR_CIERRA      shift and go to state 147
-
-
 state 118
 
-    (41) factor -> factor_sr factor_cte .
+    (75) termino_factor -> OP_DIV . termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
-    OP_MULT         reduce using rule 41 (factor -> factor_sr factor_cte .)
-    OP_DIV          reduce using rule 41 (factor -> factor_sr factor_cte .)
-    OP_SUMA         reduce using rule 41 (factor -> factor_sr factor_cte .)
-    OP_RESTA        reduce using rule 41 (factor -> factor_sr factor_cte .)
-    OP_MAYOR        reduce using rule 41 (factor -> factor_sr factor_cte .)
-    OP_MENOR        reduce using rule 41 (factor -> factor_sr factor_cte .)
-    OP_DIF          reduce using rule 41 (factor -> factor_sr factor_cte .)
-    OP_IGUAL        reduce using rule 41 (factor -> factor_sr factor_cte .)
-    PUNTO_Y_COMA    reduce using rule 41 (factor -> factor_sr factor_cte .)
-    COMA            reduce using rule 41 (factor -> factor_sr factor_cte .)
-    PAR_CIERRA      reduce using rule 41 (factor -> factor_sr factor_cte .)
+    PAR_ABRE        shift and go to state 80
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
+    OP_SUMA         shift and go to state 84
+    OP_RESTA        shift and go to state 85
 
+    termino                        shift and go to state 150
+    factor                         shift and go to state 79
+    factor_sr                      shift and go to state 81
+    empty                          shift and go to state 82
+    factor_rs                      shift and go to state 83
 
 state 119
 
-    (46) factor_cte -> ID .
-    (35) llamada -> ID . PAR_ABRE llamada_expresion PAR_CIERRA
+    (43) factor -> PAR_ABRE expresion . PAR_CIERRA
 
-    OP_MULT         reduce using rule 46 (factor_cte -> ID .)
-    OP_DIV          reduce using rule 46 (factor_cte -> ID .)
-    OP_SUMA         reduce using rule 46 (factor_cte -> ID .)
-    OP_RESTA        reduce using rule 46 (factor_cte -> ID .)
-    OP_MAYOR        reduce using rule 46 (factor_cte -> ID .)
-    OP_MENOR        reduce using rule 46 (factor_cte -> ID .)
-    OP_DIF          reduce using rule 46 (factor_cte -> ID .)
-    OP_IGUAL        reduce using rule 46 (factor_cte -> ID .)
-    PUNTO_Y_COMA    reduce using rule 46 (factor_cte -> ID .)
-    COMA            reduce using rule 46 (factor_cte -> ID .)
-    PAR_CIERRA      reduce using rule 46 (factor_cte -> ID .)
-    PAR_ABRE        shift and go to state 71
+    PAR_CIERRA      shift and go to state 151
 
 
 state 120
 
-    (47) factor_cte -> cte .
+    (44) factor -> factor_sr factor_cte .
 
-    OP_MULT         reduce using rule 47 (factor_cte -> cte .)
-    OP_DIV          reduce using rule 47 (factor_cte -> cte .)
-    OP_SUMA         reduce using rule 47 (factor_cte -> cte .)
-    OP_RESTA        reduce using rule 47 (factor_cte -> cte .)
-    OP_MAYOR        reduce using rule 47 (factor_cte -> cte .)
-    OP_MENOR        reduce using rule 47 (factor_cte -> cte .)
-    OP_DIF          reduce using rule 47 (factor_cte -> cte .)
-    OP_IGUAL        reduce using rule 47 (factor_cte -> cte .)
-    PUNTO_Y_COMA    reduce using rule 47 (factor_cte -> cte .)
-    COMA            reduce using rule 47 (factor_cte -> cte .)
-    PAR_CIERRA      reduce using rule 47 (factor_cte -> cte .)
+    OP_MULT         reduce using rule 44 (factor -> factor_sr factor_cte .)
+    OP_DIV          reduce using rule 44 (factor -> factor_sr factor_cte .)
+    OP_SUMA         reduce using rule 44 (factor -> factor_sr factor_cte .)
+    OP_RESTA        reduce using rule 44 (factor -> factor_sr factor_cte .)
+    OP_MAYOR        reduce using rule 44 (factor -> factor_sr factor_cte .)
+    OP_MENOR        reduce using rule 44 (factor -> factor_sr factor_cte .)
+    OP_MAYORIGUAL   reduce using rule 44 (factor -> factor_sr factor_cte .)
+    OP_MENORIGUAL   reduce using rule 44 (factor -> factor_sr factor_cte .)
+    OP_DIF          reduce using rule 44 (factor -> factor_sr factor_cte .)
+    OP_IGUAL        reduce using rule 44 (factor -> factor_sr factor_cte .)
+    PUNTO_Y_COMA    reduce using rule 44 (factor -> factor_sr factor_cte .)
+    COMA            reduce using rule 44 (factor -> factor_sr factor_cte .)
+    PAR_CIERRA      reduce using rule 44 (factor -> factor_sr factor_cte .)
 
 
 state 121
 
-    (48) factor_cte -> llamada .
+    (49) factor_cte -> ID .
+    (38) llamada -> ID . PAR_ABRE llamada_expresion PAR_CIERRA
 
-    OP_MULT         reduce using rule 48 (factor_cte -> llamada .)
-    OP_DIV          reduce using rule 48 (factor_cte -> llamada .)
-    OP_SUMA         reduce using rule 48 (factor_cte -> llamada .)
-    OP_RESTA        reduce using rule 48 (factor_cte -> llamada .)
-    OP_MAYOR        reduce using rule 48 (factor_cte -> llamada .)
-    OP_MENOR        reduce using rule 48 (factor_cte -> llamada .)
-    OP_DIF          reduce using rule 48 (factor_cte -> llamada .)
-    OP_IGUAL        reduce using rule 48 (factor_cte -> llamada .)
-    PUNTO_Y_COMA    reduce using rule 48 (factor_cte -> llamada .)
-    COMA            reduce using rule 48 (factor_cte -> llamada .)
-    PAR_CIERRA      reduce using rule 48 (factor_cte -> llamada .)
+    OP_MULT         reduce using rule 49 (factor_cte -> ID .)
+    OP_DIV          reduce using rule 49 (factor_cte -> ID .)
+    OP_SUMA         reduce using rule 49 (factor_cte -> ID .)
+    OP_RESTA        reduce using rule 49 (factor_cte -> ID .)
+    OP_MAYOR        reduce using rule 49 (factor_cte -> ID .)
+    OP_MENOR        reduce using rule 49 (factor_cte -> ID .)
+    OP_MAYORIGUAL   reduce using rule 49 (factor_cte -> ID .)
+    OP_MENORIGUAL   reduce using rule 49 (factor_cte -> ID .)
+    OP_DIF          reduce using rule 49 (factor_cte -> ID .)
+    OP_IGUAL        reduce using rule 49 (factor_cte -> ID .)
+    PUNTO_Y_COMA    reduce using rule 49 (factor_cte -> ID .)
+    COMA            reduce using rule 49 (factor_cte -> ID .)
+    PAR_CIERRA      reduce using rule 49 (factor_cte -> ID .)
+    PAR_ABRE        shift and go to state 71
 
 
 state 122
+
+    (50) factor_cte -> cte .
+
+    OP_MULT         reduce using rule 50 (factor_cte -> cte .)
+    OP_DIV          reduce using rule 50 (factor_cte -> cte .)
+    OP_SUMA         reduce using rule 50 (factor_cte -> cte .)
+    OP_RESTA        reduce using rule 50 (factor_cte -> cte .)
+    OP_MAYOR        reduce using rule 50 (factor_cte -> cte .)
+    OP_MENOR        reduce using rule 50 (factor_cte -> cte .)
+    OP_MAYORIGUAL   reduce using rule 50 (factor_cte -> cte .)
+    OP_MENORIGUAL   reduce using rule 50 (factor_cte -> cte .)
+    OP_DIF          reduce using rule 50 (factor_cte -> cte .)
+    OP_IGUAL        reduce using rule 50 (factor_cte -> cte .)
+    PUNTO_Y_COMA    reduce using rule 50 (factor_cte -> cte .)
+    COMA            reduce using rule 50 (factor_cte -> cte .)
+    PAR_CIERRA      reduce using rule 50 (factor_cte -> cte .)
+
+
+state 123
+
+    (51) factor_cte -> llamada .
+
+    OP_MULT         reduce using rule 51 (factor_cte -> llamada .)
+    OP_DIV          reduce using rule 51 (factor_cte -> llamada .)
+    OP_SUMA         reduce using rule 51 (factor_cte -> llamada .)
+    OP_RESTA        reduce using rule 51 (factor_cte -> llamada .)
+    OP_MAYOR        reduce using rule 51 (factor_cte -> llamada .)
+    OP_MENOR        reduce using rule 51 (factor_cte -> llamada .)
+    OP_MAYORIGUAL   reduce using rule 51 (factor_cte -> llamada .)
+    OP_MENORIGUAL   reduce using rule 51 (factor_cte -> llamada .)
+    OP_DIF          reduce using rule 51 (factor_cte -> llamada .)
+    OP_IGUAL        reduce using rule 51 (factor_cte -> llamada .)
+    PUNTO_Y_COMA    reduce using rule 51 (factor_cte -> llamada .)
+    COMA            reduce using rule 51 (factor_cte -> llamada .)
+    PAR_CIERRA      reduce using rule 51 (factor_cte -> llamada .)
+
+
+state 124
 
     (3) cte -> CTE_ENT .
 
@@ -1869,6 +1955,8 @@ state 122
     OP_RESTA        reduce using rule 3 (cte -> CTE_ENT .)
     OP_MAYOR        reduce using rule 3 (cte -> CTE_ENT .)
     OP_MENOR        reduce using rule 3 (cte -> CTE_ENT .)
+    OP_MAYORIGUAL   reduce using rule 3 (cte -> CTE_ENT .)
+    OP_MENORIGUAL   reduce using rule 3 (cte -> CTE_ENT .)
     OP_DIF          reduce using rule 3 (cte -> CTE_ENT .)
     OP_IGUAL        reduce using rule 3 (cte -> CTE_ENT .)
     PUNTO_Y_COMA    reduce using rule 3 (cte -> CTE_ENT .)
@@ -1876,7 +1964,7 @@ state 122
     PAR_CIERRA      reduce using rule 3 (cte -> CTE_ENT .)
 
 
-state 123
+state 125
 
     (4) cte -> CTE_FLOT .
 
@@ -1886,6 +1974,8 @@ state 123
     OP_RESTA        reduce using rule 4 (cte -> CTE_FLOT .)
     OP_MAYOR        reduce using rule 4 (cte -> CTE_FLOT .)
     OP_MENOR        reduce using rule 4 (cte -> CTE_FLOT .)
+    OP_MAYORIGUAL   reduce using rule 4 (cte -> CTE_FLOT .)
+    OP_MENORIGUAL   reduce using rule 4 (cte -> CTE_FLOT .)
     OP_DIF          reduce using rule 4 (cte -> CTE_FLOT .)
     OP_IGUAL        reduce using rule 4 (cte -> CTE_FLOT .)
     PUNTO_Y_COMA    reduce using rule 4 (cte -> CTE_FLOT .)
@@ -1893,28 +1983,28 @@ state 123
     PAR_CIERRA      reduce using rule 4 (cte -> CTE_FLOT .)
 
 
-state 124
-
-    (60) func_tipo -> ID DOS_PUNTOS tipo funcs_coma .
-
-    PAR_CIERRA      reduce using rule 60 (func_tipo -> ID DOS_PUNTOS tipo funcs_coma .)
-
-
-state 125
-
-    (61) funcs_coma -> empty .
-
-    PAR_CIERRA      reduce using rule 61 (funcs_coma -> empty .)
-
-
 state 126
 
-    (62) funcs_coma -> COMA . ID DOS_PUNTOS tipo funcs_coma
+    (63) func_tipo -> ID DOS_PUNTOS tipo funcs_coma .
 
-    ID              shift and go to state 148
+    PAR_CIERRA      reduce using rule 63 (func_tipo -> ID DOS_PUNTOS tipo funcs_coma .)
 
 
 state 127
+
+    (64) funcs_coma -> empty .
+
+    PAR_CIERRA      reduce using rule 64 (funcs_coma -> empty .)
+
+
+state 128
+
+    (65) funcs_coma -> COMA . ID DOS_PUNTOS tipo funcs_coma
+
+    ID              shift and go to state 152
+
+
+state 129
 
     (7) asigna -> ID OP_ASIG expresion PUNTO_Y_COMA .
 
@@ -1928,59 +2018,61 @@ state 127
     CORA_CIERRA     reduce using rule 7 (asigna -> ID OP_ASIG expresion PUNTO_Y_COMA .)
 
 
-state 128
-
-    (35) llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .
-
-    PUNTO_Y_COMA    reduce using rule 35 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
-    OP_MULT         reduce using rule 35 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
-    OP_DIV          reduce using rule 35 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
-    OP_SUMA         reduce using rule 35 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
-    OP_RESTA        reduce using rule 35 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
-    OP_MAYOR        reduce using rule 35 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
-    OP_MENOR        reduce using rule 35 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
-    OP_DIF          reduce using rule 35 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
-    OP_IGUAL        reduce using rule 35 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
-    COMA            reduce using rule 35 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
-    PAR_CIERRA      reduce using rule 35 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
-
-
-state 129
-
-    (37) llamada_expresion -> expresion llamada_ex .
-
-    PAR_CIERRA      reduce using rule 37 (llamada_expresion -> expresion llamada_ex .)
-
-
 state 130
 
-    (38) llamada_ex -> empty .
+    (38) llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .
 
-    PAR_CIERRA      reduce using rule 38 (llamada_ex -> empty .)
+    PUNTO_Y_COMA    reduce using rule 38 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
+    OP_MULT         reduce using rule 38 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
+    OP_DIV          reduce using rule 38 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
+    OP_SUMA         reduce using rule 38 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
+    OP_RESTA        reduce using rule 38 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
+    OP_MAYOR        reduce using rule 38 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
+    OP_MENOR        reduce using rule 38 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
+    OP_MAYORIGUAL   reduce using rule 38 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
+    OP_MENORIGUAL   reduce using rule 38 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
+    OP_DIF          reduce using rule 38 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
+    OP_IGUAL        reduce using rule 38 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
+    COMA            reduce using rule 38 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
+    PAR_CIERRA      reduce using rule 38 (llamada -> ID PAR_ABRE llamada_expresion PAR_CIERRA .)
 
 
 state 131
 
-    (39) llamada_ex -> COMA . expresion llamada_ex
+    (40) llamada_expresion -> expresion llamada_ex .
+
+    PAR_CIERRA      reduce using rule 40 (llamada_expresion -> expresion llamada_ex .)
+
+
+state 132
+
+    (41) llamada_ex -> empty .
+
+    PAR_CIERRA      reduce using rule 41 (llamada_ex -> empty .)
+
+
+state 133
+
+    (42) llamada_ex -> COMA . expresion llamada_ex
     (20) expresion -> . exp expresion_exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
     PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
     OP_SUMA         shift and go to state 84
     OP_RESTA        shift and go to state 85
 
-    expresion                      shift and go to state 149
+    expresion                      shift and go to state 153
     exp                            shift and go to state 77
     termino                        shift and go to state 78
     factor                         shift and go to state 79
@@ -1988,68 +2080,68 @@ state 131
     empty                          shift and go to state 82
     factor_rs                      shift and go to state 83
 
-state 132
+state 134
 
-    (27) condicion -> SI PAR_ABRE expresion PAR_CIERRA . cuerpo condicion_cuerpo PUNTO_Y_COMA
+    (30) condicion -> SI PAR_ABRE expresion PAR_CIERRA . cuerpo condicion_cuerpo PUNTO_Y_COMA
     (17) cuerpo -> . LLAVE_ABRE cuerpo_estat LLAVE_CIERRA
 
     LLAVE_ABRE      shift and go to state 37
 
-    cuerpo                         shift and go to state 150
-
-state 133
-
-    (26) ciclo -> MIENTRAS PAR_ABRE expresion PAR_CIERRA . HAZ cuerpo PUNTO_Y_COMA
-
-    HAZ             shift and go to state 151
-
-
-state 134
-
-    (30) imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA . PUNTO_Y_COMA
-
-    PUNTO_Y_COMA    shift and go to state 152
-
+    cuerpo                         shift and go to state 154
 
 state 135
 
-    (31) imprime_exp -> expresion imprime_exp_p .
+    (28) ciclo -> MIENTRAS ciclo_marca PAR_ABRE expresion . PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA
 
-    PAR_CIERRA      reduce using rule 31 (imprime_exp -> expresion imprime_exp_p .)
+    PAR_CIERRA      shift and go to state 155
 
 
 state 136
 
-    (33) imprime_exp_p -> empty .
+    (33) imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA . PUNTO_Y_COMA
 
-    PAR_CIERRA      reduce using rule 33 (imprime_exp_p -> empty .)
+    PUNTO_Y_COMA    shift and go to state 156
 
 
 state 137
 
-    (34) imprime_exp_p -> COMA . imprime_exp
-    (31) imprime_exp -> . expresion imprime_exp_p
-    (32) imprime_exp -> . LETRERO imprime_exp_p
+    (34) imprime_exp -> expresion imprime_exp_p .
+
+    PAR_CIERRA      reduce using rule 34 (imprime_exp -> expresion imprime_exp_p .)
+
+
+state 138
+
+    (36) imprime_exp_p -> empty .
+
+    PAR_CIERRA      reduce using rule 36 (imprime_exp_p -> empty .)
+
+
+state 139
+
+    (37) imprime_exp_p -> COMA . imprime_exp
+    (34) imprime_exp -> . expresion imprime_exp_p
+    (35) imprime_exp -> . LETRERO imprime_exp_p
     (20) expresion -> . exp expresion_exp
-    (65) exp -> . termino exp_termino
-    (69) termino -> . factor termino_factor
-    (40) factor -> . PAR_ABRE expresion PAR_CIERRA
-    (41) factor -> . factor_sr factor_cte
-    (42) factor_sr -> . empty
-    (43) factor_sr -> . factor_rs
-    (82) empty -> .
-    (44) factor_rs -> . OP_SUMA
-    (45) factor_rs -> . OP_RESTA
+    (68) exp -> . termino exp_termino
+    (72) termino -> . factor termino_factor
+    (43) factor -> . PAR_ABRE expresion PAR_CIERRA
+    (44) factor -> . factor_sr factor_cte
+    (45) factor_sr -> . empty
+    (46) factor_sr -> . factor_rs
+    (85) empty -> .
+    (47) factor_rs -> . OP_SUMA
+    (48) factor_rs -> . OP_RESTA
 
     LETRERO         shift and go to state 101
     PAR_ABRE        shift and go to state 80
-    ID              reduce using rule 82 (empty -> .)
-    CTE_ENT         reduce using rule 82 (empty -> .)
-    CTE_FLOT        reduce using rule 82 (empty -> .)
+    ID              reduce using rule 85 (empty -> .)
+    CTE_ENT         reduce using rule 85 (empty -> .)
+    CTE_FLOT        reduce using rule 85 (empty -> .)
     OP_SUMA         shift and go to state 84
     OP_RESTA        shift and go to state 85
 
-    imprime_exp                    shift and go to state 153
+    imprime_exp                    shift and go to state 157
     expresion                      shift and go to state 100
     exp                            shift and go to state 77
     termino                        shift and go to state 78
@@ -2058,14 +2150,14 @@ state 137
     empty                          shift and go to state 82
     factor_rs                      shift and go to state 83
 
-state 138
+state 140
 
-    (32) imprime_exp -> LETRERO imprime_exp_p .
+    (35) imprime_exp -> LETRERO imprime_exp_p .
 
-    PAR_CIERRA      reduce using rule 32 (imprime_exp -> LETRERO imprime_exp_p .)
+    PAR_CIERRA      reduce using rule 35 (imprime_exp -> LETRERO imprime_exp_p .)
 
 
-state 139
+state 141
 
     (22) expresion_exp -> OP_MAYOR exp .
 
@@ -2074,7 +2166,7 @@ state 139
     PAR_CIERRA      reduce using rule 22 (expresion_exp -> OP_MAYOR exp .)
 
 
-state 140
+state 142
 
     (23) expresion_exp -> OP_MENOR exp .
 
@@ -2083,259 +2175,294 @@ state 140
     PAR_CIERRA      reduce using rule 23 (expresion_exp -> OP_MENOR exp .)
 
 
-state 141
-
-    (24) expresion_exp -> OP_DIF exp .
-
-    PUNTO_Y_COMA    reduce using rule 24 (expresion_exp -> OP_DIF exp .)
-    COMA            reduce using rule 24 (expresion_exp -> OP_DIF exp .)
-    PAR_CIERRA      reduce using rule 24 (expresion_exp -> OP_DIF exp .)
-
-
-state 142
-
-    (25) expresion_exp -> OP_IGUAL exp .
-
-    PUNTO_Y_COMA    reduce using rule 25 (expresion_exp -> OP_IGUAL exp .)
-    COMA            reduce using rule 25 (expresion_exp -> OP_IGUAL exp .)
-    PAR_CIERRA      reduce using rule 25 (expresion_exp -> OP_IGUAL exp .)
-
-
 state 143
 
-    (67) exp_termino -> OP_SUMA exp .
+    (24) expresion_exp -> OP_MAYORIGUAL exp .
 
-    OP_MAYOR        reduce using rule 67 (exp_termino -> OP_SUMA exp .)
-    OP_MENOR        reduce using rule 67 (exp_termino -> OP_SUMA exp .)
-    OP_DIF          reduce using rule 67 (exp_termino -> OP_SUMA exp .)
-    OP_IGUAL        reduce using rule 67 (exp_termino -> OP_SUMA exp .)
-    PUNTO_Y_COMA    reduce using rule 67 (exp_termino -> OP_SUMA exp .)
-    COMA            reduce using rule 67 (exp_termino -> OP_SUMA exp .)
-    PAR_CIERRA      reduce using rule 67 (exp_termino -> OP_SUMA exp .)
+    PUNTO_Y_COMA    reduce using rule 24 (expresion_exp -> OP_MAYORIGUAL exp .)
+    COMA            reduce using rule 24 (expresion_exp -> OP_MAYORIGUAL exp .)
+    PAR_CIERRA      reduce using rule 24 (expresion_exp -> OP_MAYORIGUAL exp .)
 
 
 state 144
 
-    (68) exp_termino -> OP_RESTA exp .
+    (25) expresion_exp -> OP_MENORIGUAL exp .
 
-    OP_MAYOR        reduce using rule 68 (exp_termino -> OP_RESTA exp .)
-    OP_MENOR        reduce using rule 68 (exp_termino -> OP_RESTA exp .)
-    OP_DIF          reduce using rule 68 (exp_termino -> OP_RESTA exp .)
-    OP_IGUAL        reduce using rule 68 (exp_termino -> OP_RESTA exp .)
-    PUNTO_Y_COMA    reduce using rule 68 (exp_termino -> OP_RESTA exp .)
-    COMA            reduce using rule 68 (exp_termino -> OP_RESTA exp .)
-    PAR_CIERRA      reduce using rule 68 (exp_termino -> OP_RESTA exp .)
+    PUNTO_Y_COMA    reduce using rule 25 (expresion_exp -> OP_MENORIGUAL exp .)
+    COMA            reduce using rule 25 (expresion_exp -> OP_MENORIGUAL exp .)
+    PAR_CIERRA      reduce using rule 25 (expresion_exp -> OP_MENORIGUAL exp .)
 
 
 state 145
 
-    (71) termino_factor -> OP_MULT termino .
+    (26) expresion_exp -> OP_DIF exp .
 
-    OP_SUMA         reduce using rule 71 (termino_factor -> OP_MULT termino .)
-    OP_RESTA        reduce using rule 71 (termino_factor -> OP_MULT termino .)
-    OP_MAYOR        reduce using rule 71 (termino_factor -> OP_MULT termino .)
-    OP_MENOR        reduce using rule 71 (termino_factor -> OP_MULT termino .)
-    OP_DIF          reduce using rule 71 (termino_factor -> OP_MULT termino .)
-    OP_IGUAL        reduce using rule 71 (termino_factor -> OP_MULT termino .)
-    PUNTO_Y_COMA    reduce using rule 71 (termino_factor -> OP_MULT termino .)
-    COMA            reduce using rule 71 (termino_factor -> OP_MULT termino .)
-    PAR_CIERRA      reduce using rule 71 (termino_factor -> OP_MULT termino .)
+    PUNTO_Y_COMA    reduce using rule 26 (expresion_exp -> OP_DIF exp .)
+    COMA            reduce using rule 26 (expresion_exp -> OP_DIF exp .)
+    PAR_CIERRA      reduce using rule 26 (expresion_exp -> OP_DIF exp .)
 
 
 state 146
 
-    (72) termino_factor -> OP_DIV termino .
+    (27) expresion_exp -> OP_IGUAL exp .
 
-    OP_SUMA         reduce using rule 72 (termino_factor -> OP_DIV termino .)
-    OP_RESTA        reduce using rule 72 (termino_factor -> OP_DIV termino .)
-    OP_MAYOR        reduce using rule 72 (termino_factor -> OP_DIV termino .)
-    OP_MENOR        reduce using rule 72 (termino_factor -> OP_DIV termino .)
-    OP_DIF          reduce using rule 72 (termino_factor -> OP_DIV termino .)
-    OP_IGUAL        reduce using rule 72 (termino_factor -> OP_DIV termino .)
-    PUNTO_Y_COMA    reduce using rule 72 (termino_factor -> OP_DIV termino .)
-    COMA            reduce using rule 72 (termino_factor -> OP_DIV termino .)
-    PAR_CIERRA      reduce using rule 72 (termino_factor -> OP_DIV termino .)
+    PUNTO_Y_COMA    reduce using rule 27 (expresion_exp -> OP_IGUAL exp .)
+    COMA            reduce using rule 27 (expresion_exp -> OP_IGUAL exp .)
+    PAR_CIERRA      reduce using rule 27 (expresion_exp -> OP_IGUAL exp .)
 
 
 state 147
 
-    (40) factor -> PAR_ABRE expresion PAR_CIERRA .
+    (70) exp_termino -> OP_SUMA exp .
 
-    OP_MULT         reduce using rule 40 (factor -> PAR_ABRE expresion PAR_CIERRA .)
-    OP_DIV          reduce using rule 40 (factor -> PAR_ABRE expresion PAR_CIERRA .)
-    OP_SUMA         reduce using rule 40 (factor -> PAR_ABRE expresion PAR_CIERRA .)
-    OP_RESTA        reduce using rule 40 (factor -> PAR_ABRE expresion PAR_CIERRA .)
-    OP_MAYOR        reduce using rule 40 (factor -> PAR_ABRE expresion PAR_CIERRA .)
-    OP_MENOR        reduce using rule 40 (factor -> PAR_ABRE expresion PAR_CIERRA .)
-    OP_DIF          reduce using rule 40 (factor -> PAR_ABRE expresion PAR_CIERRA .)
-    OP_IGUAL        reduce using rule 40 (factor -> PAR_ABRE expresion PAR_CIERRA .)
-    PUNTO_Y_COMA    reduce using rule 40 (factor -> PAR_ABRE expresion PAR_CIERRA .)
-    COMA            reduce using rule 40 (factor -> PAR_ABRE expresion PAR_CIERRA .)
-    PAR_CIERRA      reduce using rule 40 (factor -> PAR_ABRE expresion PAR_CIERRA .)
+    OP_MAYOR        reduce using rule 70 (exp_termino -> OP_SUMA exp .)
+    OP_MENOR        reduce using rule 70 (exp_termino -> OP_SUMA exp .)
+    OP_MAYORIGUAL   reduce using rule 70 (exp_termino -> OP_SUMA exp .)
+    OP_MENORIGUAL   reduce using rule 70 (exp_termino -> OP_SUMA exp .)
+    OP_DIF          reduce using rule 70 (exp_termino -> OP_SUMA exp .)
+    OP_IGUAL        reduce using rule 70 (exp_termino -> OP_SUMA exp .)
+    PUNTO_Y_COMA    reduce using rule 70 (exp_termino -> OP_SUMA exp .)
+    COMA            reduce using rule 70 (exp_termino -> OP_SUMA exp .)
+    PAR_CIERRA      reduce using rule 70 (exp_termino -> OP_SUMA exp .)
 
 
 state 148
 
-    (62) funcs_coma -> COMA ID . DOS_PUNTOS tipo funcs_coma
+    (71) exp_termino -> OP_RESTA exp .
 
-    DOS_PUNTOS      shift and go to state 154
+    OP_MAYOR        reduce using rule 71 (exp_termino -> OP_RESTA exp .)
+    OP_MENOR        reduce using rule 71 (exp_termino -> OP_RESTA exp .)
+    OP_MAYORIGUAL   reduce using rule 71 (exp_termino -> OP_RESTA exp .)
+    OP_MENORIGUAL   reduce using rule 71 (exp_termino -> OP_RESTA exp .)
+    OP_DIF          reduce using rule 71 (exp_termino -> OP_RESTA exp .)
+    OP_IGUAL        reduce using rule 71 (exp_termino -> OP_RESTA exp .)
+    PUNTO_Y_COMA    reduce using rule 71 (exp_termino -> OP_RESTA exp .)
+    COMA            reduce using rule 71 (exp_termino -> OP_RESTA exp .)
+    PAR_CIERRA      reduce using rule 71 (exp_termino -> OP_RESTA exp .)
 
 
 state 149
 
-    (39) llamada_ex -> COMA expresion . llamada_ex
-    (38) llamada_ex -> . empty
-    (39) llamada_ex -> . COMA expresion llamada_ex
-    (82) empty -> .
+    (74) termino_factor -> OP_MULT termino .
 
-    COMA            shift and go to state 131
-    PAR_CIERRA      reduce using rule 82 (empty -> .)
+    OP_SUMA         reduce using rule 74 (termino_factor -> OP_MULT termino .)
+    OP_RESTA        reduce using rule 74 (termino_factor -> OP_MULT termino .)
+    OP_MAYOR        reduce using rule 74 (termino_factor -> OP_MULT termino .)
+    OP_MENOR        reduce using rule 74 (termino_factor -> OP_MULT termino .)
+    OP_MAYORIGUAL   reduce using rule 74 (termino_factor -> OP_MULT termino .)
+    OP_MENORIGUAL   reduce using rule 74 (termino_factor -> OP_MULT termino .)
+    OP_DIF          reduce using rule 74 (termino_factor -> OP_MULT termino .)
+    OP_IGUAL        reduce using rule 74 (termino_factor -> OP_MULT termino .)
+    PUNTO_Y_COMA    reduce using rule 74 (termino_factor -> OP_MULT termino .)
+    COMA            reduce using rule 74 (termino_factor -> OP_MULT termino .)
+    PAR_CIERRA      reduce using rule 74 (termino_factor -> OP_MULT termino .)
 
-    llamada_ex                     shift and go to state 155
-    empty                          shift and go to state 130
 
 state 150
 
-    (27) condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo . condicion_cuerpo PUNTO_Y_COMA
-    (28) condicion_cuerpo -> . empty
-    (29) condicion_cuerpo -> . SINO cuerpo
-    (82) empty -> .
+    (75) termino_factor -> OP_DIV termino .
 
-    SINO            shift and go to state 158
-    PUNTO_Y_COMA    reduce using rule 82 (empty -> .)
+    OP_SUMA         reduce using rule 75 (termino_factor -> OP_DIV termino .)
+    OP_RESTA        reduce using rule 75 (termino_factor -> OP_DIV termino .)
+    OP_MAYOR        reduce using rule 75 (termino_factor -> OP_DIV termino .)
+    OP_MENOR        reduce using rule 75 (termino_factor -> OP_DIV termino .)
+    OP_MAYORIGUAL   reduce using rule 75 (termino_factor -> OP_DIV termino .)
+    OP_MENORIGUAL   reduce using rule 75 (termino_factor -> OP_DIV termino .)
+    OP_DIF          reduce using rule 75 (termino_factor -> OP_DIV termino .)
+    OP_IGUAL        reduce using rule 75 (termino_factor -> OP_DIV termino .)
+    PUNTO_Y_COMA    reduce using rule 75 (termino_factor -> OP_DIV termino .)
+    COMA            reduce using rule 75 (termino_factor -> OP_DIV termino .)
+    PAR_CIERRA      reduce using rule 75 (termino_factor -> OP_DIV termino .)
 
-    condicion_cuerpo               shift and go to state 156
-    empty                          shift and go to state 157
 
 state 151
 
-    (26) ciclo -> MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ . cuerpo PUNTO_Y_COMA
-    (17) cuerpo -> . LLAVE_ABRE cuerpo_estat LLAVE_CIERRA
+    (43) factor -> PAR_ABRE expresion PAR_CIERRA .
 
-    LLAVE_ABRE      shift and go to state 37
+    OP_MULT         reduce using rule 43 (factor -> PAR_ABRE expresion PAR_CIERRA .)
+    OP_DIV          reduce using rule 43 (factor -> PAR_ABRE expresion PAR_CIERRA .)
+    OP_SUMA         reduce using rule 43 (factor -> PAR_ABRE expresion PAR_CIERRA .)
+    OP_RESTA        reduce using rule 43 (factor -> PAR_ABRE expresion PAR_CIERRA .)
+    OP_MAYOR        reduce using rule 43 (factor -> PAR_ABRE expresion PAR_CIERRA .)
+    OP_MENOR        reduce using rule 43 (factor -> PAR_ABRE expresion PAR_CIERRA .)
+    OP_MAYORIGUAL   reduce using rule 43 (factor -> PAR_ABRE expresion PAR_CIERRA .)
+    OP_MENORIGUAL   reduce using rule 43 (factor -> PAR_ABRE expresion PAR_CIERRA .)
+    OP_DIF          reduce using rule 43 (factor -> PAR_ABRE expresion PAR_CIERRA .)
+    OP_IGUAL        reduce using rule 43 (factor -> PAR_ABRE expresion PAR_CIERRA .)
+    PUNTO_Y_COMA    reduce using rule 43 (factor -> PAR_ABRE expresion PAR_CIERRA .)
+    COMA            reduce using rule 43 (factor -> PAR_ABRE expresion PAR_CIERRA .)
+    PAR_CIERRA      reduce using rule 43 (factor -> PAR_ABRE expresion PAR_CIERRA .)
 
-    cuerpo                         shift and go to state 159
 
 state 152
 
-    (30) imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .
+    (65) funcs_coma -> COMA ID . DOS_PUNTOS tipo funcs_coma
 
-    CORA_ABRE       reduce using rule 30 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
-    ID              reduce using rule 30 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
-    SI              reduce using rule 30 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
-    MIENTRAS        reduce using rule 30 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
-    ESCRIBE         reduce using rule 30 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
-    RETURN          reduce using rule 30 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
-    LLAVE_CIERRA    reduce using rule 30 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
-    CORA_CIERRA     reduce using rule 30 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
+    DOS_PUNTOS      shift and go to state 158
 
 
 state 153
 
-    (34) imprime_exp_p -> COMA imprime_exp .
+    (42) llamada_ex -> COMA expresion . llamada_ex
+    (41) llamada_ex -> . empty
+    (42) llamada_ex -> . COMA expresion llamada_ex
+    (85) empty -> .
 
-    PAR_CIERRA      reduce using rule 34 (imprime_exp_p -> COMA imprime_exp .)
+    COMA            shift and go to state 133
+    PAR_CIERRA      reduce using rule 85 (empty -> .)
 
+    llamada_ex                     shift and go to state 159
+    empty                          shift and go to state 132
 
 state 154
 
-    (62) funcs_coma -> COMA ID DOS_PUNTOS . tipo funcs_coma
+    (30) condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo . condicion_cuerpo PUNTO_Y_COMA
+    (31) condicion_cuerpo -> . empty
+    (32) condicion_cuerpo -> . SINO cuerpo
+    (85) empty -> .
+
+    SINO            shift and go to state 162
+    PUNTO_Y_COMA    reduce using rule 85 (empty -> .)
+
+    condicion_cuerpo               shift and go to state 160
+    empty                          shift and go to state 161
+
+state 155
+
+    (28) ciclo -> MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA . HAZ cuerpo PUNTO_Y_COMA
+
+    HAZ             shift and go to state 163
+
+
+state 156
+
+    (33) imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .
+
+    CORA_ABRE       reduce using rule 33 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
+    ID              reduce using rule 33 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
+    SI              reduce using rule 33 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
+    MIENTRAS        reduce using rule 33 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
+    ESCRIBE         reduce using rule 33 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
+    RETURN          reduce using rule 33 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
+    LLAVE_CIERRA    reduce using rule 33 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
+    CORA_CIERRA     reduce using rule 33 (imprime -> ESCRIBE PAR_ABRE imprime_exp PAR_CIERRA PUNTO_Y_COMA .)
+
+
+state 157
+
+    (37) imprime_exp_p -> COMA imprime_exp .
+
+    PAR_CIERRA      reduce using rule 37 (imprime_exp_p -> COMA imprime_exp .)
+
+
+state 158
+
+    (65) funcs_coma -> COMA ID DOS_PUNTOS . tipo funcs_coma
     (1) tipo -> . ENTERO
     (2) tipo -> . FLOTANTE
 
     ENTERO          shift and go to state 18
     FLOTANTE        shift and go to state 19
 
-    tipo                           shift and go to state 160
-
-state 155
-
-    (39) llamada_ex -> COMA expresion llamada_ex .
-
-    PAR_CIERRA      reduce using rule 39 (llamada_ex -> COMA expresion llamada_ex .)
-
-
-state 156
-
-    (27) condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo . PUNTO_Y_COMA
-
-    PUNTO_Y_COMA    shift and go to state 161
-
-
-state 157
-
-    (28) condicion_cuerpo -> empty .
-
-    PUNTO_Y_COMA    reduce using rule 28 (condicion_cuerpo -> empty .)
-
-
-state 158
-
-    (29) condicion_cuerpo -> SINO . cuerpo
-    (17) cuerpo -> . LLAVE_ABRE cuerpo_estat LLAVE_CIERRA
-
-    LLAVE_ABRE      shift and go to state 37
-
-    cuerpo                         shift and go to state 162
+    tipo                           shift and go to state 164
 
 state 159
 
-    (26) ciclo -> MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo . PUNTO_Y_COMA
+    (42) llamada_ex -> COMA expresion llamada_ex .
 
-    PUNTO_Y_COMA    shift and go to state 163
+    PAR_CIERRA      reduce using rule 42 (llamada_ex -> COMA expresion llamada_ex .)
 
 
 state 160
 
-    (62) funcs_coma -> COMA ID DOS_PUNTOS tipo . funcs_coma
-    (61) funcs_coma -> . empty
-    (62) funcs_coma -> . COMA ID DOS_PUNTOS tipo funcs_coma
-    (82) empty -> .
+    (30) condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo . PUNTO_Y_COMA
 
-    COMA            shift and go to state 126
-    PAR_CIERRA      reduce using rule 82 (empty -> .)
+    PUNTO_Y_COMA    shift and go to state 165
 
-    funcs_coma                     shift and go to state 164
-    empty                          shift and go to state 125
 
 state 161
 
-    (27) condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .
+    (31) condicion_cuerpo -> empty .
 
-    CORA_ABRE       reduce using rule 27 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
-    ID              reduce using rule 27 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
-    SI              reduce using rule 27 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
-    MIENTRAS        reduce using rule 27 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
-    ESCRIBE         reduce using rule 27 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
-    RETURN          reduce using rule 27 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
-    LLAVE_CIERRA    reduce using rule 27 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
-    CORA_CIERRA     reduce using rule 27 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
+    PUNTO_Y_COMA    reduce using rule 31 (condicion_cuerpo -> empty .)
 
 
 state 162
 
-    (29) condicion_cuerpo -> SINO cuerpo .
+    (32) condicion_cuerpo -> SINO . cuerpo
+    (17) cuerpo -> . LLAVE_ABRE cuerpo_estat LLAVE_CIERRA
 
-    PUNTO_Y_COMA    reduce using rule 29 (condicion_cuerpo -> SINO cuerpo .)
+    LLAVE_ABRE      shift and go to state 37
 
+    cuerpo                         shift and go to state 166
 
 state 163
 
-    (26) ciclo -> MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .
+    (28) ciclo -> MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ . cuerpo PUNTO_Y_COMA
+    (17) cuerpo -> . LLAVE_ABRE cuerpo_estat LLAVE_CIERRA
 
-    CORA_ABRE       reduce using rule 26 (ciclo -> MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
-    ID              reduce using rule 26 (ciclo -> MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
-    SI              reduce using rule 26 (ciclo -> MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
-    MIENTRAS        reduce using rule 26 (ciclo -> MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
-    ESCRIBE         reduce using rule 26 (ciclo -> MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
-    RETURN          reduce using rule 26 (ciclo -> MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
-    LLAVE_CIERRA    reduce using rule 26 (ciclo -> MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
-    CORA_CIERRA     reduce using rule 26 (ciclo -> MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
+    LLAVE_ABRE      shift and go to state 37
 
+    cuerpo                         shift and go to state 167
 
 state 164
 
-    (62) funcs_coma -> COMA ID DOS_PUNTOS tipo funcs_coma .
+    (65) funcs_coma -> COMA ID DOS_PUNTOS tipo . funcs_coma
+    (64) funcs_coma -> . empty
+    (65) funcs_coma -> . COMA ID DOS_PUNTOS tipo funcs_coma
+    (85) empty -> .
 
-    PAR_CIERRA      reduce using rule 62 (funcs_coma -> COMA ID DOS_PUNTOS tipo funcs_coma .)
+    COMA            shift and go to state 128
+    PAR_CIERRA      reduce using rule 85 (empty -> .)
+
+    funcs_coma                     shift and go to state 168
+    empty                          shift and go to state 127
+
+state 165
+
+    (30) condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .
+
+    CORA_ABRE       reduce using rule 30 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
+    ID              reduce using rule 30 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
+    SI              reduce using rule 30 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
+    MIENTRAS        reduce using rule 30 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
+    ESCRIBE         reduce using rule 30 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
+    RETURN          reduce using rule 30 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
+    LLAVE_CIERRA    reduce using rule 30 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
+    CORA_CIERRA     reduce using rule 30 (condicion -> SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA .)
+
+
+state 166
+
+    (32) condicion_cuerpo -> SINO cuerpo .
+
+    PUNTO_Y_COMA    reduce using rule 32 (condicion_cuerpo -> SINO cuerpo .)
+
+
+state 167
+
+    (28) ciclo -> MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo . PUNTO_Y_COMA
+
+    PUNTO_Y_COMA    shift and go to state 169
+
+
+state 168
+
+    (65) funcs_coma -> COMA ID DOS_PUNTOS tipo funcs_coma .
+
+    PAR_CIERRA      reduce using rule 65 (funcs_coma -> COMA ID DOS_PUNTOS tipo funcs_coma .)
+
+
+state 169
+
+    (28) ciclo -> MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .
+
+    CORA_ABRE       reduce using rule 28 (ciclo -> MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
+    ID              reduce using rule 28 (ciclo -> MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
+    SI              reduce using rule 28 (ciclo -> MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
+    MIENTRAS        reduce using rule 28 (ciclo -> MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
+    ESCRIBE         reduce using rule 28 (ciclo -> MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
+    RETURN          reduce using rule 28 (ciclo -> MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
+    LLAVE_CIERRA    reduce using rule 28 (ciclo -> MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
+    CORA_CIERRA     reduce using rule 28 (ciclo -> MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA .)
 

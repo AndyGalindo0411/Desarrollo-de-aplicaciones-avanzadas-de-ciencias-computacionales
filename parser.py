@@ -11,6 +11,7 @@ from tabla_symbolos import (
 )
 
 # Infraestructura de IR (cuádruplos y temporales)
+import intermediate as ir
 from intermediate import (
     alloc_global,
     alloc_local,
@@ -18,10 +19,10 @@ from intermediate import (
     fill_quad,
     intern_const,
     new_temp,
-    next_quad,
     PJumps,
     reset_function_memory,
     reset_ir,
+    quads,
 )
 from memory import SEG_LOCAL, SEG_TEMP, memory_manager
 
@@ -50,6 +51,7 @@ current_func: FunctionInfo | None = None
 
 # Salto inicial para brincar funciones y entrar a main
 main_goto: int | None = None
+main_start: int | None = None
 
 
 def _reset_semantic_structures():
@@ -57,11 +59,12 @@ def _reset_semantic_structures():
     Reinicia el directorio de funciones y la tabla de variables globales.
     Se llama al inicio de cada parse(code).
     """
-    global func_dir, global_var_table, current_func, main_goto
+    global func_dir, global_var_table, current_func, main_goto, main_start
     func_dir = FunctionDirectory()
     global_var_table = VariableTable()
     current_func = None
     main_goto = None
+    main_start = None
 
 
 def _extract_var_decls(vars_ast):
@@ -117,7 +120,7 @@ def _lookup_var_type(name: str) -> str:
 #  PRECEDENCIA (SINTAXIS)
 # ============================================================
 precedence = (
-    ('nonassoc', 'OP_IGUAL', 'OP_DIF', 'OP_MAYOR', 'OP_MENOR'),
+    ('nonassoc', 'OP_IGUAL', 'OP_DIF', 'OP_MAYOR', 'OP_MENOR', 'OP_MAYORIGUAL', 'OP_MENORIGUAL'),
     ('left', 'OP_SUMA', 'OP_RESTA'),
     ('left', 'OP_MULT', 'OP_DIV'),
 )
@@ -281,6 +284,8 @@ def p_expresion_exp(p):
     '''expresion_exp : empty
                      | OP_MAYOR exp
                      | OP_MENOR exp
+                     | OP_MAYORIGUAL exp
+                     | OP_MENORIGUAL exp
                      | OP_DIF   exp
                      | OP_IGUAL exp'''
     if len(p) == 3:
@@ -295,10 +300,10 @@ def p_expresion_exp(p):
 # 7) <CICLO>
 # =======================
 def p_ciclo(p):
-    'ciclo : MIENTRAS PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA'
-    loop_start = next_quad
+    'ciclo : MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA'
+    loop_start = p[2]
 
-    cond_place, cond_type = p[3]
+    cond_place, cond_type = p[4]
     if cond_type != TIPO_BOOL:
         raise SemanticError("La condici?n de 'mientras' debe ser de tipo bool")
 
@@ -306,16 +311,21 @@ def p_ciclo(p):
     false_jump = emit_quad('GOTOF', cond_place, None, None)
     PJumps.append(false_jump)
 
-    body = p[6]
+    body = p[7]
 
     # Al final del cuerpo, regresar al inicio
     emit_quad('GOTO', None, None, loop_start)
 
     # Rellenar el salto falso para que apunte despu?s del ciclo
     end_false = PJumps.pop()
-    fill_quad(end_false, next_quad)
+    fill_quad(end_false, ir.next_quad)
 
-    p[0] = ('while', p[3], body)
+    p[0] = ('while', p[4], body)
+
+
+def p_ciclo_marca(p):
+    'ciclo_marca : '
+    p[0] = ir.next_quad
 
 
 
@@ -339,14 +349,14 @@ def p_condicion(p):
         # Saltar el bloque else al terminar el then
         goto_end = emit_quad('GOTO', None, None, None)
         # Rellenar el GOTOF para que apunte al inicio del else
-        fill_quad(PJumps.pop(), next_quad)
+        fill_quad(PJumps.pop(), ir.next_quad)
         PJumps.append(goto_end)
         p[0] = ('if_else', p[3], then_body, else_body)
         # Rellenar el salto al final
-        fill_quad(PJumps.pop(), next_quad)
+        fill_quad(PJumps.pop(), ir.next_quad)
     else:
         # Sin else: el GOTOF apunta al final del if
-        fill_quad(PJumps.pop(), next_quad)
+        fill_quad(PJumps.pop(), ir.next_quad)
         p[0] = ('if', p[3], then_body)
 
 
@@ -569,7 +579,7 @@ def p_func_header(p):
     # Establecer contexto actual y punto de entrada de la funci?n
     global current_func
     current_func = func_info
-    func_info.start_quad = next_quad
+    func_info.start_quad = ir.next_quad
 
     p[0] = (func_info, return_type, func_name, params)
 
@@ -732,8 +742,10 @@ def p_program_entry(p):
 # Helper: rellenar salto al main justo al entrar a INICIO
 def p_program_main(p):
     'program_main : '
+    global main_start
+    main_start = ir.next_quad
     if main_goto is not None:
-        fill_quad(main_goto, next_quad)
+        fill_quad(main_goto, ir.next_quad)
     p[0] = None
 
 
@@ -795,6 +807,22 @@ def parse(code: str):
     _reset_semantic_structures()
     reset_ir()  # limpiar PilaO, PTypes, POper, PJumps, quads, temporales
     ast = parser.parse(code, lexer=_lexer)
+    # Salvaguarda: si el salto a main quedó sin rellenar, rellenarlo aquí
+    if main_goto is not None:
+        # Calcular inicio probable de main:
+        # - si main_start se seteo en program_main, úsalo
+        # - si no, toma el quad siguiente al último ENDFUNC (o 1 si no hay funcs)
+        start_guess = 1
+        for idx, (op, _, _, _) in enumerate(quads):
+            if op == 'ENDFUNC':
+                start_guess = idx + 1
+        target = main_start if main_start is not None else start_guess
+        try:
+            _, _, _, res = quads[main_goto]
+            if res in (None, 0):
+                fill_quad(main_goto, target)
+        except Exception:
+            fill_quad(main_goto, target)
     return ast
 
 

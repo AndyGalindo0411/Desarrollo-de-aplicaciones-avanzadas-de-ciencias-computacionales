@@ -13,33 +13,38 @@ def compile_and_execute(
     label: str = "fuente",
     show_ast: bool = False,
     show_symbols: bool = False,
-    show_quads: bool = True,
+    show_quads: bool = False,
+    show_consts: bool = False,
+    verbose: bool = False,
 ) -> None:
     """
-    Compila y ejecuta un fragmento de codigo Patito mostrando
-    tabla de constantes, cuadruplos y salida en la VM (similar al main de guia).
+    Compila y ejecuta un fragmento de codigo Patito.
+    Si verbose/flags estan activos, muestra AST, simbolos, constantes y cuadruplos.
     """
-    print(f"\n=== Compilando {label} ===")
+    if verbose:
+        print(f"\n=== Compilando {label} ===")
     ast = parse(code)
 
-    print("\n--- COMPILACION EXITOSA ---")
+    if verbose:
+        print("\n--- COMPILACION EXITOSA ---")
 
-    if show_ast:
+    if show_ast and verbose:
         print("\n=== AST ===")
         print(ast)
 
-    if show_symbols:
+    if show_symbols and verbose:
         print("\n=== SIMBOLOS ===")
         print_symbols()
 
-    print("\n--- TABLA DE CONSTANTES (VALOR -> DIRECCION) ---")
-    if const_table:
-        for valor, direccion in sorted(const_table.items(), key=lambda x: x[1]):
-            print(f"  {valor} : {direccion}")
-    else:
-        print("  (vacia)")
+    if show_consts and verbose:
+        print("\n--- TABLA DE CONSTANTES (VALOR -> DIRECCION) ---")
+        if const_table:
+            for valor, direccion in sorted(const_table.items(), key=lambda x: x[1]):
+                print(f"  {valor} : {direccion}")
+        else:
+            print("  (vacia)")
 
-    if show_quads:
+    if show_quads and verbose:
         print("\n--- LISTA DE CUADRUPLOS (DIRS) ---")
         if quads:
             for i, quad in enumerate(quads):
@@ -51,7 +56,8 @@ def compile_and_execute(
         else:
             print("  (sin cuadruplos)")
 
-    print("\n--- EJECUCION (Maquina Virtual) ---")
+    if verbose:
+        print("\n--- EJECUCION (Maquina Virtual) ---")
     vm = VirtualMachine(quads, const_table, get_function_directory())
     vm.run()
 
@@ -294,6 +300,10 @@ def run_guide_tests(show_quads: bool = False) -> None:
         print("No hay .txt en tests/ para ejecutar.")
         return
 
+    print(f"=== Casos encontrados en {base} ===")
+    for f in files:
+        print(f" - {f.name}")
+
     for fpath in files:
         fname = fpath.name
         try:
@@ -309,6 +319,8 @@ def run_guide_tests(show_quads: bool = False) -> None:
                 show_ast=False,
                 show_symbols=False,
                 show_quads=show_quads,
+                show_consts=False,
+                verbose=show_quads,
             )
         except (SemanticError, SyntaxError) as e:
             print(f"[{fname}] FALLO: {e}")
@@ -322,6 +334,7 @@ def main(argv=None) -> None:
     argp.add_argument("--ast", action="store_true", help="Imprimir AST resultante")
     argp.add_argument("--symbols", action="store_true", help="Imprimir tablas de simbolos")
     argp.add_argument("--quads", action="store_true", help="Imprimir cuadruplos generados")
+    argp.add_argument("--consts", action="store_true", help="Imprimir tabla de constantes")
     argp.add_argument("--quad-tests-dir", help="Ejecuta todos los .txt en el directorio de pruebas de cuadruplos")
     argp.add_argument("--semantic-tests-dir", help="Ejecuta todos los .txt en el directorio de pruebas semanticas")
     argp.add_argument("--run-builtins", action="store_true", help="Ejecuta el set de pruebas internas (parser/cuadruplos)")
@@ -349,6 +362,8 @@ def main(argv=None) -> None:
                 show_ast=args.ast,
                 show_symbols=args.symbols,
                 show_quads=args.quads,
+                show_consts=args.consts,
+                verbose=(args.ast or args.symbols or args.quads or args.consts),
             )
         except SemanticError as e:
             print(f"Error semantico: {e}", file=sys.stderr)
@@ -360,7 +375,13 @@ def main(argv=None) -> None:
             print(f"Error inesperado: {e}", file=sys.stderr)
             sys.exit(1)
     else:
-        print("No se proporciono archivo fuente; se omite parse individual.")
+        if not (
+            args.run_guide_tests
+            or args.run_builtins
+            or args.quad_tests_dir
+            or args.semantic_tests_dir
+        ):
+            print("No se proporciono archivo fuente; se omite parse individual.")
 
     if args.quad_tests_dir:
         run_suite(args.quad_tests_dir, "QuadrupleTests")

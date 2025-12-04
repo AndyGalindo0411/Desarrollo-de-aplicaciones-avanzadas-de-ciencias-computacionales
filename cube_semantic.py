@@ -13,6 +13,8 @@ OP_MULT   = "*"
 OP_DIV    = "/"
 OP_MAYOR  = ">"
 OP_MENOR  = "<"
+OP_MAYORIGUAL = ">="
+OP_MENORIGUAL = "<="
 OP_IGUAL  = "=="
 OP_DIF    = "!="
 OP_ASIG   = "="
@@ -25,7 +27,8 @@ def _init_cube():
     # Helper para inicializar estructura
     tipos = [TIPO_ENTERO, TIPO_FLOTANTE, TIPO_BOOL, TIPO_LETRERO]
     ops   = [OP_SUMA, OP_RESTA, OP_MULT, OP_DIV,
-             OP_MAYOR, OP_MENOR, OP_IGUAL, OP_DIF, OP_ASIG]
+             OP_MAYOR, OP_MENOR, OP_MAYORIGUAL, OP_MENORIGUAL,
+             OP_IGUAL, OP_DIF, OP_ASIG]
 
     for t1 in tipos:
         SEMANTIC_CUBE[t1] = {}
@@ -56,10 +59,10 @@ def _init_cube():
         SEMANTIC_CUBE[TIPO_FLOTANTE][op][TIPO_FLOTANTE] = TIPO_FLOTANTE
 
     # -------------------------
-    # Operaciones relacionales <, >
+    # Operaciones relacionales <, >, <=, >=
     # Solo entre tipos numéricos, resultado bool
     # -------------------------
-    rel_ops = [OP_MAYOR, OP_MENOR]
+    rel_ops = [OP_MAYOR, OP_MENOR, OP_MAYORIGUAL, OP_MENORIGUAL]
 
     numeric_pairs = [
         (TIPO_ENTERO,   TIPO_ENTERO),
