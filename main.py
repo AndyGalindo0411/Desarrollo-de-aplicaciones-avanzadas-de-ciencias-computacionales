@@ -4,7 +4,56 @@ from pathlib import Path
 
 from parser import parse, get_function_directory, get_global_var_table
 from tabla_symbolos import SemanticError
-from intermediate import dump_quads
+from intermediate import dump_quads, quads, const_table
+from VM_Patito import VirtualMachine
+
+
+def compile_and_execute(
+    code: str,
+    label: str = "fuente",
+    show_ast: bool = False,
+    show_symbols: bool = False,
+    show_quads: bool = True,
+) -> None:
+    """
+    Compila y ejecuta un fragmento de codigo Patito mostrando
+    tabla de constantes, cuadruplos y salida en la VM (similar al main de guia).
+    """
+    print(f"\n=== Compilando {label} ===")
+    ast = parse(code)
+
+    print("\n--- COMPILACION EXITOSA ---")
+
+    if show_ast:
+        print("\n=== AST ===")
+        print(ast)
+
+    if show_symbols:
+        print("\n=== SIMBOLOS ===")
+        print_symbols()
+
+    print("\n--- TABLA DE CONSTANTES (VALOR -> DIRECCION) ---")
+    if const_table:
+        for valor, direccion in sorted(const_table.items(), key=lambda x: x[1]):
+            print(f"  {valor} : {direccion}")
+    else:
+        print("  (vacia)")
+
+    if show_quads:
+        print("\n--- LISTA DE CUADRUPLOS (DIRS) ---")
+        if quads:
+            for i, quad in enumerate(quads):
+                op, op1, op2, res = quad
+                op1_str = str(op1) if op1 is not None else "None"
+                op2_str = str(op2) if op2 is not None else "None"
+                res_str = str(res) if res is not None else "None"
+                print(f"  {i}: ({op}, {op1_str}, {op2_str}, {res_str})")
+        else:
+            print("  (sin cuadruplos)")
+
+    print("\n--- EJECUCION (Maquina Virtual) ---")
+    vm = VirtualMachine(quads, const_table, get_function_directory())
+    vm.run()
 
 
 def print_symbols() -> None:
@@ -230,6 +279,43 @@ def run_builtin_tests(show_quads: bool = False) -> None:
     print(f"Resumen built-in: {passed}/{total} pasaron segun expectativa")
 
 
+def run_guide_tests(show_quads: bool = False) -> None:
+    """
+    Casos inspirados en el main de guia; leen los .txt en tests/ y se ejecutan en la VM.
+    """
+    base = Path("tests")
+
+    if not base.exists():
+        print("No existe el directorio tests/ con los casos de guia.")
+        return
+
+    files = sorted(base.glob("*.txt"))
+    if not files:
+        print("No hay .txt en tests/ para ejecutar.")
+        return
+
+    for fpath in files:
+        fname = fpath.name
+        try:
+            code = fpath.read_text(encoding="utf-8")
+        except Exception as e:
+            print(f"[{fname}] ERROR al leer: {e}")
+            continue
+
+        try:
+            compile_and_execute(
+                code=code,
+                label=f"tests/{fname}",
+                show_ast=False,
+                show_symbols=False,
+                show_quads=show_quads,
+            )
+        except (SemanticError, SyntaxError) as e:
+            print(f"[{fname}] FALLO: {e}")
+        except Exception as e:
+            print(f"[{fname}] ERROR inesperado: {e}")
+
+
 def main(argv=None) -> None:
     argp = argparse.ArgumentParser(description="Frontend Patito")
     argp.add_argument("fuente", nargs="?", help="Archivo con codigo Patito")
@@ -240,6 +326,8 @@ def main(argv=None) -> None:
     argp.add_argument("--semantic-tests-dir", help="Ejecuta todos los .txt en el directorio de pruebas semanticas")
     argp.add_argument("--run-builtins", action="store_true", help="Ejecuta el set de pruebas internas (parser/cuadruplos)")
     argp.add_argument("--builtins-show-quads", action="store_true", help="Al correr --run-builtins, mostrar cuadruplos de cada caso")
+    argp.add_argument("--run-guide-tests", action="store_true", help="Ejecuta los casos del main de guia (compila y corre en VM)")
+    argp.add_argument("--guide-show-quads", action="store_true", help="Al correr --run-guide-tests, mostrar cuadruplos")
     args = argp.parse_args(argv)
 
     if args.fuente:
@@ -255,17 +343,13 @@ def main(argv=None) -> None:
             sys.exit(1)
 
         try:
-            ast = parse(code)
-            print("Parseo exitoso")
-            if args.ast:
-                print("\n=== AST ===")
-                print(ast)
-            if args.symbols:
-                print("\n=== SIMBOLOS ===")
-                print_symbols()
-            if args.quads:
-                print("\n=== CUADRUPLOS ===")
-                dump_quads()
+            compile_and_execute(
+                code=code,
+                label=str(src_path),
+                show_ast=args.ast,
+                show_symbols=args.symbols,
+                show_quads=args.quads,
+            )
         except SemanticError as e:
             print(f"Error semantico: {e}", file=sys.stderr)
             sys.exit(1)
@@ -284,6 +368,8 @@ def main(argv=None) -> None:
         run_suite(args.semantic_tests_dir, "SemanticTests")
     if args.run_builtins:
         run_builtin_tests(show_quads=args.builtins_show_quads)
+    if args.run_guide_tests:
+        run_guide_tests(show_quads=args.guide_show_quads)
 
 
 if __name__ == "__main__":

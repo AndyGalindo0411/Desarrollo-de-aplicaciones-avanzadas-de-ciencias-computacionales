@@ -1,0 +1,10 @@
+programa suma;
+vars n, i, acc: entero;
+inicio {
+  n = 5; i = 1; acc = 0;
+  mientras (i <= n) haz {
+    acc = acc + i;
+    i = i + 1;
+  };
+  escribe("sum", acc);
+} fin

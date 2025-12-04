@@ -1,0 +1,8 @@
+programa retorno;
+vars r: entero;
+entero suma(a: entero, b: entero) {
+  {
+    return a + b;
+  }
+};
+inicio { r = suma(2, 3); escribe("r", r); } fin

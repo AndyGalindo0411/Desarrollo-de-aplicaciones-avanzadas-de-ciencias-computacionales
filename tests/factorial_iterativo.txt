@@ -1,0 +1,12 @@
+programa factorial;
+vars n, i, res: entero;
+inicio {
+  n = 5;
+  res = 1;
+  i = 1;
+  mientras (i <= n) haz {
+    res = res * i;
+    i = i + 1;
+  };
+  escribe("fact", n, res);
+} fin

@@ -1,0 +1,8 @@
+programa asigna;
+vars a, b, c: entero;
+inicio {
+  a = 1;
+  b = 2;
+  c = a + b * 3;
+  escribe(a, b, c);
+} fin

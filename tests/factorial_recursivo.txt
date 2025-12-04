@@ -1,0 +1,8 @@
+programa frec;
+vars n, res: entero;
+entero fact(n: entero) {
+  {
+    si (n < 2) { return 1; } sino { return n * fact(n - 1); };
+  }
+};
+inicio { n = 4; res = fact(n); escribe("fact", n, res); } fin

@@ -1,0 +1,6 @@
+programa cond;
+vars x: entero;
+inicio {
+  x = 0;
+  si (x > -1) { escribe("cero"); } sino { escribe("otro"); };
+} fin

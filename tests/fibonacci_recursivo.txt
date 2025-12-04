@@ -1,0 +1,12 @@
+programa fibrec;
+vars n, res: entero;
+entero fib(n: entero) {
+  {
+    si (n < 2) { return n; } sino { return fib(n - 1) + fib(n - 2); };
+  }
+};
+inicio {
+  n = 6;
+  res = fib(n);
+  escribe("fib", n, res);
+} fin

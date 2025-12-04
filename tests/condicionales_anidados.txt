@@ -1,0 +1,10 @@
+programa conds;
+vars x, y: entero;
+inicio {
+  x = 3; y = 5;
+  si (x < y) {
+    si (y < 10) { escribe("rama1"); } sino { escribe("rama2"); };
+  } sino {
+    escribe("rama3");
+  };
+} fin

@@ -1,0 +1,3 @@
+programa func;
+nula saludo() { { escribe("hola"); } };
+inicio { saludo(); } fin
