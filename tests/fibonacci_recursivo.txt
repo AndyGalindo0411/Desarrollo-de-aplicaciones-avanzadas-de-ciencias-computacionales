@@ -6,7 +6,7 @@ entero fib(n: entero) {
   }
 };
 inicio {
-  n = 6;
+  n = 20;
   res = fib(n);
   escribe("fib", n, res);
 } fin

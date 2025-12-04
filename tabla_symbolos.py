@@ -67,7 +67,7 @@ class FunctionDirectory:
         self._funcs[name] = func_info
         return func_info
 
-    def get_function(self, name: str) -> Optional[FunctionInfo]:
+    def get_function(self, name: str) -> Dict[str, FunctionInfo]:
         return self._funcs.get(name)
 
     def has_function(self, name: str) -> bool:

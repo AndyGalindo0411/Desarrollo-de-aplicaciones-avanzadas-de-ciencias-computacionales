@@ -7,7 +7,6 @@ from intermediate import quads, const_table
 from tabla_symbolos import SemanticError
 from VM_Patito import VirtualMachine
 
-
 def print_const_table() -> None:
     print("TABLA DE CONSTANTES")
     if not const_table:
@@ -63,7 +62,7 @@ def main(argv=None) -> None:
     argp = argparse.ArgumentParser(description="Runner Patito")
     argp.add_argument(
         "--test",
-        default="tests/fibonacci.txt",
+        default="tests/valido.txt",
         help="Ruta al archivo Patito a compilar/ejecutar",
     )
     args = argp.parse_args(argv)

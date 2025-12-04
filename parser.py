@@ -95,9 +95,7 @@ def _lookup_var_type(name: str) -> str:
     return _lookup_var_info(name).var_type
 
 
-# ============================================================
 #  SINTAXIS
-# ============================================================
 precedence = (
     ('nonassoc', 'OP_IGUAL', 'OP_DIF', 'OP_MAYOR', 'OP_MENOR', 'OP_MAYORIGUAL', 'OP_MENORIGUAL'),
     ('left', 'OP_SUMA', 'OP_RESTA'),
@@ -158,7 +156,7 @@ def p_retorno(p):
         if ret_type == 'nula':
             raise SemanticError("Funciones 'nula' no deben regresar valor")
         if expr_type != ret_type:
-            raise SemanticError(f"Tipo de retorno inv?lido: se esperaba {ret_type}, se obtuvo {expr_type}")
+            raise SemanticError(f"Tipo de retorno invalido: se esperaba {ret_type}, se obtuvo {expr_type}")
         emit_quad('RETURN', expr_place, None, None)
         p[0] = ('return', (expr_place, expr_type))
 
@@ -279,18 +277,9 @@ def p_expresion_exp(p):
 # 7) <CICLO>
 # =======================
 def p_ciclo(p):
-    'ciclo : MIENTRAS ciclo_marca PAR_ABRE expresion PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA'
+    'ciclo : MIENTRAS ciclo_marca PAR_ABRE expresion ciclo_cond_prep PAR_CIERRA HAZ cuerpo PUNTO_Y_COMA'
     loop_start = p[2]
-
-    cond_place, cond_type = p[4]
-    if cond_type != TIPO_BOOL:
-        raise SemanticError("La condici?n de 'mientras' debe ser de tipo bool")
-
-    # GOTOF para salir del ciclo si la condici?n es falsa
-    false_jump = emit_quad('GOTOF', cond_place, None, None)
-    PJumps.append(false_jump)
-
-    body = p[7]
+    body = p[8]
 
     # Al final del cuerpo, regresar al inicio
     emit_quad('GOTO', None, None, loop_start)
@@ -300,6 +289,16 @@ def p_ciclo(p):
     fill_quad(end_false, ir.next_quad)
 
     p[0] = ('while', p[4], body)
+
+
+def p_ciclo_cond_prep(p):
+    'ciclo_cond_prep : '
+    cond_place, cond_type = p[-1]
+    if cond_type != TIPO_BOOL:
+        raise SemanticError("La condicion de 'mientras' debe ser de tipo bool")
+    # GOTOF para salir del ciclo si la condici?n es falsa (se inserta antes del cuerpo)
+    false_jump = emit_quad('GOTOF', cond_place, None, None)
+    PJumps.append(false_jump)
 
 
 def p_ciclo_marca(p):
@@ -312,26 +311,13 @@ def p_ciclo_marca(p):
 # 8) <CONDICIÓN>  y  <CONDICIÓN_CUERPO>
 # =======================
 def p_condicion(p):
-    'condicion : SI PAR_ABRE expresion PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA'
-    cond_place, cond_type = p[3]
-    if cond_type != TIPO_BOOL:
-        raise SemanticError("La condici?n de 'si' debe ser de tipo bool")
-
-    # GOTOF hacia el else (o al final si no hay else)
-    false_jump = emit_quad('GOTOF', cond_place, None, None)
-    PJumps.append(false_jump)
-
-    then_body = p[5]
-    else_body = p[6]
+    'condicion : SI PAR_ABRE expresion condicion_marca PAR_CIERRA cuerpo condicion_cuerpo PUNTO_Y_COMA'
+    then_body = p[6]
+    else_body = p[7]
 
     if else_body is not None:
-        # Saltar el bloque else al terminar el then
-        goto_end = emit_quad('GOTO', None, None, None)
-        # Rellenar el GOTOF para que apunte al inicio del else
-        fill_quad(PJumps.pop(), ir.next_quad)
-        PJumps.append(goto_end)
         p[0] = ('if_else', p[3], then_body, else_body)
-        # Rellenar el salto al final
+        # Rellenar el salto al final (goto_end) que quedó en la pila
         fill_quad(PJumps.pop(), ir.next_quad)
     else:
         # Sin else: el GOTOF apunta al final del if
@@ -339,14 +325,32 @@ def p_condicion(p):
         p[0] = ('if', p[3], then_body)
 
 
+def p_condicion_marca(p):
+    'condicion_marca : '
+    cond_place, cond_type = p[-1]
+    if cond_type != TIPO_BOOL:
+        raise SemanticError("La condicion de 'si' debe ser de tipo bool")
+    # Emitir GOTOF inmediatamente despues de evaluar la condicion
+    false_jump = emit_quad('GOTOF', cond_place, None, None)
+    PJumps.append(false_jump)
+
+
 
 def p_condicion_cuerpo(p):
     '''condicion_cuerpo : empty
-                        | SINO cuerpo'''
-    if len(p) == 3:
-        p[0] = p[2]
+                        | SINO condicion_else_marca cuerpo'''
+    if len(p) == 4:
+        p[0] = p[3]
     else:
         p[0] = None
+
+
+def p_condicion_else_marca(p):
+    'condicion_else_marca : '
+    goto_end = emit_quad('GOTO', None, None, None)
+    false_jump = PJumps.pop()
+    fill_quad(false_jump, ir.next_quad)
+    PJumps.append(goto_end)
 
 
 # =======================
@@ -399,11 +403,11 @@ def p_llamada(p):
 
     func_info = func_dir.get_function(func_name)
     if not func_info:
-        raise SemanticError(f"Funci?n '{func_name}' no declarada")
+        raise SemanticError(f"Funcion '{func_name}' no declarada")
 
     expected_params = func_info.parameters
     if len(args) != len(expected_params):
-        raise SemanticError(f"Funci?n '{func_name}' espera {len(expected_params)} argumentos, recibi? {len(args)}")
+        raise SemanticError(f"Funcion '{func_name}' espera {len(expected_params)} argumentos, recibi? {len(args)}")
 
     total_size = sum(func_info.locals_size.values()) + sum(func_info.temps_size.values())
     emit_quad('ERA', total_size, None, func_name)
@@ -575,7 +579,7 @@ def p_funcs(p):
     func_info.locals_size = memory_manager.get_usage(SEG_LOCAL)
     func_info.temps_size = memory_manager.get_usage(SEG_TEMP)
 
-    # Cu?druplo de fin de funci?n
+    # Cuadruplo de fin de funcion
     emit_quad('ENDFUNC', None, None, None)
 
     # Salir del contexto de funci?n
@@ -704,9 +708,6 @@ def p_programa(p):
     p[0] = node('programa', prog_name, pro_vars_ast, pro_funcs_list, main_body)
     # Fin de programa
     emit_quad('END', None, None, None)
-
-
-
 
 
 
