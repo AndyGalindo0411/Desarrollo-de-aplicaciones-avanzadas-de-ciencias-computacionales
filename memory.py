@@ -41,7 +41,7 @@ BASES = {
 
 
 class MemoryOverflowError(MemoryError):
-    """Se intentó asignar una dirección fuera del rango disponible."""
+    """Se intent? asignar una direcci?n fuera del rango disponible."""
 
 
 class MemoryManager:
@@ -62,7 +62,7 @@ class MemoryManager:
         self._free_temps = {tipo: [] for tipo in self._base_map[SEG_TEMP].keys()}
 
     def reset_locals(self) -> None:
-        """Reinicia sólo el segmento de variables locales."""
+        """Reinicia s?lo el segmento de variables locales."""
         self._counters[SEG_LOCAL] = self._base_map[SEG_LOCAL].copy()
 
     def reset_temps(self) -> None:
@@ -71,7 +71,7 @@ class MemoryManager:
         self._free_temps = {tipo: [] for tipo in self._base_map[SEG_TEMP].keys()}
 
     def allocate(self, segment: str, tipo: str) -> int:
-        """Entrega una nueva dirección para el segmento/tipo indicado."""
+        """Entrega una nueva direcci?n para el segmento/tipo indicado."""
         if segment == SEG_TEMP:
             free_list = self._free_temps.get(tipo, [])
             if free_list:
@@ -98,8 +98,8 @@ class MemoryManager:
             usage[tipo] = self._counters[segment][tipo] - base
         return usage
 
-        def segment_of(self, address: int) -> str | None:
-        """Devuelve el segmento al que pertenece una dirección, o None si no encaja."""
+    def segment_of(self, address: int) -> str | None:
+        """Devuelve el segmento al que pertenece una direcci?n, o None si no encaja."""
         for seg, bases in self._base_map.items():
             for tipo, base in bases.items():
                 if base <= address < base + RANGE_SIZE:

@@ -166,7 +166,7 @@ def p_retorno(p):
     func_info = current_func
     ret_type = func_info.return_type
 
-    if len(p) == 4:  # RETURN PUNTO_Y_COMA (sin expresi?n)
+    if len(p) == 3:  # RETURN PUNTO_Y_COMA (sin expresi?n)
         if ret_type != 'nula':
             raise SemanticError(f"La funci?n '{func_info.name}' debe regresar {ret_type}")
         emit_quad('RETURN', None, None, None)
@@ -509,8 +509,11 @@ def p_factor_cte(p):
         # p[1] es (valor, tipo) ya
         p[0] = p[1]
     else:
-        # llamada: por ahora no soportamos llamadas que regresen valor
-        raise SemanticError("Uso de llamadas en expresiones no está soportado en esta etapa.")
+        # llamada: usar valor de retorno si no es 'nula'
+        call_tag, fname, args, ret_place, ret_type = p[1]
+        if ret_type == 'nula':
+            raise SemanticError("Llamada a función 'nula' no puede usarse en expresiones")
+        p[0] = (ret_place, ret_type)
 
 
 # =======================
@@ -576,12 +579,6 @@ def p_funcs(p):
     func_info, return_type, func_name, params = p[1]
     vars_ast = p[3]  # AST de vars locales (o None)
 
-    # Registrar variables locales declaradas en 'func_vars'
-    if vars_ast:
-        for var_name, var_type in _extract_var_decls(vars_ast):
-            addr = alloc_local(var_type)
-            func_info.var_table.add_variable(var_name, var_type, addr, is_param=False)
-
     body = p[4]
     p[0] = ('func', return_type, func_name, params, vars_ast, body)
 
@@ -628,6 +625,10 @@ def p_func_vars(p):
     '''func_vars : empty
                  | vars'''
     p[0] = p[1]
+    if p[1] is not None and current_func is not None:
+        for var_name, var_type in _extract_var_decls(p[1]):
+            addr = alloc_local(var_type)
+            current_func.var_table.add_variable(var_name, var_type, addr, is_param=False)
 
 
 # =======================
@@ -710,12 +711,6 @@ def p_programa(p):
     pro_funcs_list = p[6]
     main_body = p[9]
 
-    # ========= ACCI?N SEM?NTICA: Variables globales =========
-    if pro_vars_ast is not None:
-        for var_name, var_type in _extract_var_decls(pro_vars_ast):
-            addr = alloc_global(var_type)
-            global_var_table.add_variable(var_name, var_type, addr)
-
     # AST del programa (como antes)
     p[0] = node('programa', prog_name, pro_vars_ast, pro_funcs_list, main_body)
     # Fin de programa
@@ -746,6 +741,10 @@ def p_pro_vars(p):
     '''pro_vars : empty
                 | vars'''
     p[0] = p[1]
+    if p[1] is not None and current_func is None:
+        for var_name, var_type in _extract_var_decls(p[1]):
+            addr = alloc_global(var_type)
+            global_var_table.add_variable(var_name, var_type, addr)
 
 
 def p_pro_funcs(p):
