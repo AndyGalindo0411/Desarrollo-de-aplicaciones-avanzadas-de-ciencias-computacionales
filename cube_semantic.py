@@ -37,9 +37,7 @@ def _init_cube():
             for t2 in tipos:
                 SEMANTIC_CUBE[t1][op][t2] = TIPO_ERROR  # por defecto: error
 
-    # -------------------------
     # Operaciones aritméticas
-    # -------------------------
     arith_ops = [OP_SUMA, OP_RESTA, OP_MULT, OP_DIV]
 
     # entero (op) entero -> entero
@@ -58,10 +56,8 @@ def _init_cube():
     for op in arith_ops:
         SEMANTIC_CUBE[TIPO_FLOTANTE][op][TIPO_FLOTANTE] = TIPO_FLOTANTE
 
-    # -------------------------
     # Operaciones relacionales <, >, <=, >=
     # Solo entre tipos numéricos, resultado bool
-    # -------------------------
     rel_ops = [OP_MAYOR, OP_MENOR, OP_MAYORIGUAL, OP_MENORIGUAL]
 
     numeric_pairs = [
@@ -75,9 +71,7 @@ def _init_cube():
         for t1, t2 in numeric_pairs:
             SEMANTIC_CUBE[t1][op][t2] = TIPO_BOOL
 
-    # -------------------------
     # Operaciones de igualdad ==, !=
-    # -------------------------
     eq_ops = [OP_IGUAL, OP_DIF]
 
     # Numérico con numérico -> bool
@@ -93,9 +87,7 @@ def _init_cube():
     for op in eq_ops:
         SEMANTIC_CUBE[TIPO_LETRERO][op][TIPO_LETRERO] = TIPO_BOOL
 
-    # -------------------------
     # Asignación =
-    # -------------------------
     op = OP_ASIG
 
     # entero = entero
@@ -113,15 +105,9 @@ def _init_cube():
 
     # entero = flotante se queda como error (pérdida de precisión)
 
-
-# Inicializar el cubo al importar el módulo
 _init_cube()
 
 def result_type(left_type: str, operator: str, right_type: str) -> str:
-    """
-    Devuelve el tipo resultante de (left_type operator right_type)
-    según el cubo semántico, o 'error' si la operación es inválida.
-    """
     return SEMANTIC_CUBE.get(left_type, {}) \
                         .get(operator, {}) \
                         .get(right_type, TIPO_ERROR)

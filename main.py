@@ -17,10 +17,6 @@ def compile_and_execute(
     show_consts: bool = False,
     verbose: bool = False,
 ) -> None:
-    """
-    Compila y ejecuta un fragmento de codigo Patito.
-    Si verbose/flags estan activos, muestra AST, simbolos, constantes y cuadruplos.
-    """
     if verbose:
         print(f"\n=== Compilando {label} ===")
     ast = parse(code)
@@ -158,10 +154,6 @@ def run_suite(dir_path: str, label: str) -> None:
 
 
 def run_builtin_tests(show_quads: bool = False) -> None:
-    """
-    Bateria interna de pruebas de parser/semantica.
-    Marca OK/FALLO y muestra el error real en los fallos esperados.
-    """
     cases = [
         ("minimo", True, """
         programa test;
@@ -286,18 +278,9 @@ def run_builtin_tests(show_quads: bool = False) -> None:
 
 
 def run_guide_tests(show_quads: bool = False) -> None:
-    """
-    Casos inspirados en el main de guia; leen los .txt en tests/ y se ejecutan en la VM.
-    """
     base = Path("tests")
-
-    if not base.exists():
-        print("No existe el directorio tests/ con los casos de guia.")
-        return
-
     files = sorted(base.glob("*.txt"))
     if not files:
-        print("No hay .txt en tests/ para ejecutar.")
         return
 
     print(f"=== Casos encontrados en {base} ===")

@@ -34,9 +34,8 @@ tokens = [
     'LETRERO', 'CTE_FLOT', 'CTE_ENT', 'ID',
 ] + list(reserved.values())
 
-# ------------------
-# Tokens por ER (según tu tabla)
-# ------------------
+# Tokens 
+
 # Operadores (dobles primero por máxima voracidad)
 t_OP_MAYORIGUAL = r'>='
 t_OP_MENORIGUAL = r'<='
@@ -62,7 +61,7 @@ t_DOS_PUNTOS   = r':'
 t_PUNTO_Y_COMA = r';'
 
 # Literales (letrero = "(l|d|s|op|vacío)*")
-# Implementación robusta como cadena con escapes estilo C (sin salto de línea adentro)
+
 def t_LETRERO(t):
     r'"([^\\\n]|(\\.))*?"'
     return t

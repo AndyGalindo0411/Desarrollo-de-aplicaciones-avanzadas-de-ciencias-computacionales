@@ -26,7 +26,7 @@ from intermediate import (
 )
 from memory import SEG_LOCAL, SEG_TEMP, memory_manager
 
-# (Opcional) Cubo semántico para tipos
+# Cubo semántico para tipos
 from cube_semantic import (
     result_type,
     TIPO_ENTERO,
@@ -36,9 +36,7 @@ from cube_semantic import (
     TIPO_ERROR,
 )
 
-# ============================================================
 #  ESTRUCTURAS SEMÁNTICAS GLOBALES
-# ============================================================
 
 # Directorio de funciones (todas las funciones del programa)
 func_dir: FunctionDirectory = FunctionDirectory()
@@ -55,10 +53,6 @@ main_start: int | None = None
 
 
 def _reset_semantic_structures():
-    """
-    Reinicia el directorio de funciones y la tabla de variables globales.
-    Se llama al inicio de cada parse(code).
-    """
     global func_dir, global_var_table, current_func, main_goto, main_start
     func_dir = FunctionDirectory()
     global_var_table = VariableTable()
@@ -68,16 +62,6 @@ def _reset_semantic_structures():
 
 
 def _extract_var_decls(vars_ast):
-    """
-    Extrae una lista de (nombre, tipo) a partir del AST de 'vars'.
-
-    Forma del AST de vars (según tus reglas):
-        ('vars', [id1, id2, ...], tipo, vars_final)
-
-    donde vars_final es:
-        - None, o
-        - otro nodo 'vars' anidado con la misma forma.
-    """
     result = []
 
     def visit(node):
@@ -97,10 +81,6 @@ def _extract_var_decls(vars_ast):
 
 
 def _lookup_var_info(name: str) -> VariableInfo:
-    """
-    Busca la variable en el \u00e1mbito actual (local si estamos dentro de una
-    función, o global en caso contrario). Levanta SemanticError si no existe.
-    """
     if current_func:
         info = current_func.var_table.lookup(name)
         if info:
@@ -112,12 +92,11 @@ def _lookup_var_info(name: str) -> VariableInfo:
 
 
 def _lookup_var_type(name: str) -> str:
-    """Atajo para obtener el tipo de una variable declarada."""
     return _lookup_var_info(name).var_type
 
 
 # ============================================================
-#  PRECEDENCIA (SINTAXIS)
+#  SINTAXIS
 # ============================================================
 precedence = (
     ('nonassoc', 'OP_IGUAL', 'OP_DIF', 'OP_MAYOR', 'OP_MENOR', 'OP_MAYORIGUAL', 'OP_MENORIGUAL'),
@@ -797,13 +776,6 @@ parser = yacc.yacc(start='programa')
 #  API PÚBLICA DEL PARSER
 # ============================================================
 def parse(code: str):
-    """
-    Parsea código fuente Patito y devuelve un AST ligero.
-    Además, llena:
-      - func_dir  (Directorio de Funciones)
-      - global_var_table  (Tabla de Variables Global)
-      - y limpia las pilas/cuádruplos de IR antes de usarlo.
-    """
     _reset_semantic_structures()
     reset_ir()  # limpiar PilaO, PTypes, POper, PJumps, quads, temporales
     ast = parser.parse(code, lexer=_lexer)
@@ -827,14 +799,8 @@ def parse(code: str):
 
 
 def get_function_directory() -> FunctionDirectory:
-    """
-    Devuelve el directorio de funciones construido en el último parse().
-    """
     return func_dir
 
 
 def get_global_var_table() -> VariableTable:
-    """
-    Devuelve la tabla de variables globales construida en el último parse().
-    """
     return global_var_table

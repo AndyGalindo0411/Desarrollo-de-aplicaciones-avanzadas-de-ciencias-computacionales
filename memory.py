@@ -1,5 +1,4 @@
-# memory.py
-# Gestor de direcciones virtuales para Patito.
+# Gestor de direcciones virtuales.
 # Asigna espacios para variables globales, locales, temporales y constantes.
 
 from typing import Dict
@@ -41,15 +40,9 @@ BASES = {
 
 
 class MemoryOverflowError(MemoryError):
-    """Se intent? asignar una direcci?n fuera del rango disponible."""
-
+    """ERROR"""
 
 class MemoryManager:
-    """
-    Administra direcciones virtuales para cada segmento y tipo.
-    Incluye una free-list para temporales, de modo que puedan reciclarse.
-    """
-
     def __init__(self) -> None:
         self._base_map: Dict[str, Dict[str, int]] = BASES
         self._counters: Dict[str, Dict[str, int]] = {}
@@ -57,21 +50,21 @@ class MemoryManager:
         self.reset_all()
 
     def reset_all(self) -> None:
-        """Reinicia todos los contadores y libera temporales."""
+        #Reinicia todos los contadores y libera temporales
         self._counters = {seg: bases.copy() for seg, bases in self._base_map.items()}
         self._free_temps = {tipo: [] for tipo in self._base_map[SEG_TEMP].keys()}
 
     def reset_locals(self) -> None:
-        """Reinicia s?lo el segmento de variables locales."""
+        #Reinicia solo el segmento de variables locales.
         self._counters[SEG_LOCAL] = self._base_map[SEG_LOCAL].copy()
 
     def reset_temps(self) -> None:
-        """Reinicia contadores y free-list de temporales."""
+        #Reinicia contadores y free-list de temporales
         self._counters[SEG_TEMP] = self._base_map[SEG_TEMP].copy()
         self._free_temps = {tipo: [] for tipo in self._base_map[SEG_TEMP].keys()}
 
     def allocate(self, segment: str, tipo: str) -> int:
-        """Entrega una nueva direcci?n para el segmento/tipo indicado."""
+        #Entrega una nueva direccion para el segmento/tipo indicado
         if segment == SEG_TEMP:
             free_list = self._free_temps.get(tipo, [])
             if free_list:
@@ -85,21 +78,18 @@ class MemoryManager:
         return next_addr
 
     def free_temp(self, tipo: str, address: int) -> None:
-        """
-        Regresa un temporal a la free-list. No valida si el temporal
-        sigue en uso; debe llamarse con criterio.
-        """
+        #Regresa un temporal a la free-list. No valida si el temporal
         self._free_temps.setdefault(tipo, []).append(address)
 
     def get_usage(self, segment: str) -> Dict[str, int]:
-        """Devuelve un dict tipo->cu?ntas direcciones se han usado en el segmento."""
+        #Devuelve un dict tipo->cuantas direcciones se han usado en el segmento
         usage: Dict[str, int] = {}
         for tipo, base in self._base_map[segment].items():
             usage[tipo] = self._counters[segment][tipo] - base
         return usage
 
     def segment_of(self, address: int) -> str | None:
-        """Devuelve el segmento al que pertenece una direcci?n, o None si no encaja."""
+        #Devuelve el segmento al que pertenece una direccion, o None si no encaja
         for seg, bases in self._base_map.items():
             for tipo, base in bases.items():
                 if base <= address < base + RANGE_SIZE:
