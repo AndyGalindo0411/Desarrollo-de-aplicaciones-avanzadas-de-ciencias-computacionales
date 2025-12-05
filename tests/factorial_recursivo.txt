@@ -1,30 +1,21 @@
-programa factorial_recursivo;
-vars n, res1, res2: entero;
+programa factorial_rec;
+vars n, res: entero;
 
-nula factorial_recursivo(n: entero) {
+nula factorial_rec(n: entero) {
   {
-    si (n == 0) { res1 = 1; } sino { factorial_recursivo(n - 1); res1 = res1 * n; };
-  }
-};
-
-nula factorial_iterativo(n: entero) {
-  {
-    res2 = 1;
-    mientras (n > 0) haz {
-      res2 = res2 * n;
-      n = n - 1;
+    si (n == 0) {
+      res = 1;
+    } sino {
+      factorial_rec(n - 1);
+      res = res * n;
     };
   }
 };
 
 inicio {
-  escribe("--- TEST FACTORIAL ---");
-  escribe("Usando n = 5");
+  escribe("--- FACTORIAL RECURSIVO ---");
   n = 5;
-  factorial_recursivo(n);
-  factorial_iterativo(n);
-  escribe("N =", n);
-  escribe("Factorial recursivo: ", res1);
-  escribe("Factorial iterativo: ", res2);
-  si (res1 == res2) { escribe("SON IGUALES"); } sino { escribe("ERROR"); };
+  factorial_rec(n);
+  escribe("n =", n);
+  escribe("Factorial recursivo:", res);
 } fin

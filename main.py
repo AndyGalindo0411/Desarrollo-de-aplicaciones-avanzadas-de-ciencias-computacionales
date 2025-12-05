@@ -62,7 +62,7 @@ def main(argv=None) -> None:
     argp = argparse.ArgumentParser(description="Runner Patito")
     argp.add_argument(
         "--test",
-        default="tests/valido.txt",
+        default="tests/fibonacci_recursivo.txt",
         help="Ruta al archivo Patito a compilar/ejecutar",
     )
     args = argp.parse_args(argv)
